@@ -3,6 +3,7 @@ import { User, UserRole } from "../src/entity/User";
 import { parse } from 'cookie';
 import { verify } from 'jsonwebtoken';
 import {GUID} from './auth'
+
 export async function validate(user: User, pw: string){
     const errors = new Array();
     user.errors=errors
@@ -12,8 +13,6 @@ export async function validate(user: User, pw: string){
     try{
     let manager = (await getDatabaseConnection()).manager
     const found = await manager.findOne(User, {"email": user.email}).catch(e=>{console.log(e)});
-    console.log("==================")
-    console.log(found);
     if (found)
         errors.push('user email already exist')
     else

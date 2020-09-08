@@ -4,7 +4,7 @@ import Axios, { Method } from "axios";
 import { UserRole } from "../src/entity/User";
 import cookie, { parse } from 'cookie';
 
-import nextConnect, { NextHandler } from "next-connect";
+import  { NextHandler } from "next-connect";
 import { IncomingMessage } from "http";
 import {global} from './global'
 
