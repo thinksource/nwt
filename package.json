@@ -1,0 +1,40 @@
+{
+  "name": "nextjs-with-typescript",
+  "version": "4.0.0",
+  "private": true,
+  "dependencies": {
+    "@material-ui/core": "^4.11.0",
+    "@material-ui/icons": "^4.9.1",
+    "@material-ui/lab": "^4.0.0-alpha.56",
+    "axios": "^0.20.0",
+    "clsx": "latest",
+    "cookie": "^0.4.1",
+    "formik": "^2.1.5",
+    "isomorphic-unfetch": "^3.0.0",
+    "jsonwebtoken": "^8.5.1",
+    "lodash": "^4.17.20",
+    "mysql": "^2.18.1",
+    "next": "latest",
+    "next-connect": "^0.9.0",
+    "react": "latest",
+    "react-dom": "latest",
+    "typeorm": "^0.2.25"
+  },
+  "scripts": {
+    "dev": "next",
+    "build": "next build",
+    "start": "next start",
+    "typeorm": "ts-node ./node_modules/typeorm/cli.js",
+    "post-update": "echo \"codesandbox preview only, need an update\" && yarn upgrade --latest"
+  },
+  "devDependencies": {
+    "@babel/plugin-proposal-decorators": "^7.10.5",
+    "@types/cookies": "^0.7.4",
+    "@types/jsonwebtoken": "^8.5.0",
+    "@types/lodash": "^4.14.161",
+    "@types/node": "latest",
+    "@types/react": "latest",
+    "@types/react-dom": "latest",
+    "typescript": "latest"
+  }
+}
