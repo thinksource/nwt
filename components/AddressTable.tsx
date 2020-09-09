@@ -36,8 +36,15 @@ interface Props{
     title: string,
     personid: string
 }
+interface IContact{
+  job_title:string,
+  email:string,
+  country:string,
+  state: string
+}
 
-export default function SimpleModal(props: Props) {
+export default function SimpleModal(props:Props) {
+  var rows:IContact[]=[]
   const classes = useStyles();
   // getModalStyle is not a pure function, we roll the style only on the first render
   const [modalStyle] = React.useState(getModalStyle);
@@ -58,11 +65,16 @@ export default function SimpleModal(props: Props) {
     setOpen(false);
   }
 
-  useEffect(async ()=>{
-    const result = await Axios.get(`/api/contact/${props.personid}`)
+  useEffect(()=>{
+    Axios.get(`/api/contact/${props.personid}`).then(res=>{
+      if(res.status===200){
+          rows=res.data
+      }
+    })
   })
 
   const body = (
+    <DialogTitle >{props.title}</DialogTitle>
     <div style={modalStyle} className={classes.paper}>
       <p >
         <label>Job Title:</label>
@@ -88,39 +100,11 @@ export default function SimpleModal(props: Props) {
     <div>
 
       <Dialog onClose={handleClose} aria-labelledby="simple-dialog-title" open={open}>
-        <DialogTitle >{props.title}</DialogTitle>
+       
         {body}
       </Dialog>
 
-      <TableContainer component={Paper}>
-      <button type="button" onClick={handleOpen}>
-        Add Contact
-      </button>
-      <Table aria-label="simple table">
-        <TableHead>
-          <TableRow>
-            <TableCell>Dessert (100g serving)</TableCell>
-            <TableCell align="right">Calories</TableCell>
-            <TableCell align="right">Fat&nbsp;(g)</TableCell>
-            <TableCell align="right">Carbs&nbsp;(g)</TableCell>
-            <TableCell align="right">Protein&nbsp;(g)</TableCell>
-          </TableRow>
-        </TableHead>
-        <TableBody>
-          {rows.map((row) => (
-            <TableRow key={row.name}>
-              <TableCell component="th" scope="row">
-                {row.name}
-              </TableCell>
-              <TableCell align="right">{row.calories}</TableCell>
-              <TableCell align="right">{row.fat}</TableCell>
-              <TableCell align="right">{row.carbs}</TableCell>
-              <TableCell align="right">{row.protein}</TableCell>
-            </TableRow>
-          ))}
-        </TableBody>
-      </Table>
-    </TableContainer>
+
     </div>
   );
 }

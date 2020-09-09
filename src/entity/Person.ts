@@ -4,7 +4,7 @@ import {Contact} from "./Contact";
 import { Organization } from "./Organization";
 import _ from 'lodash';
 import { v4 as uuidv4 } from 'uuid';
-import { getDatabaseConnection } from "../../libs/db";
+
 export enum PersonTitle {
     Mr = "Mr.",
     Miss = "Miss",
@@ -36,7 +36,9 @@ export class Person extends BaseEntity {
     @Column('varchar')
     last_name!: string;
 
-    @ManyToOne(() => Organization, org => org.people, { nullable: true, eager: true})
+    @ManyToOne(() => Organization, org => org.people, { nullable: true
+        // , eager: true
+    })
     @JoinColumn({ name: 'belongOrganizationId' })
     belong_organization!: Organization;
 

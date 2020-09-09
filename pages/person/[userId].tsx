@@ -1,5 +1,5 @@
-import React, { useState, ChangeEvent } from 'react';
-import { Typography, Grid, Select, MenuItem, TextField, FormControlLabel, Switch, NativeSelect, makeStyles, Theme, createStyles, Paper, Button } from '@material-ui/core';
+import React, { useState, ChangeEvent, useEffect } from 'react';
+import { Typography, Grid, Select, MenuItem, TextField, FormControlLabel, Switch, NativeSelect, makeStyles, Theme, createStyles, Paper, Button, TableContainer, Table, TableHead, TableRow, TableCell, TableBody, Dialog, DialogTitle, DialogContent } from '@material-ui/core';
 import { Formik, Form, Field} from 'formik'
 import { authenticated } from '../../libs/auth';
 import { NextPageContext, GetServerSideProps, GetServerSidePropsResult } from 'next';
@@ -12,6 +12,8 @@ import { Person } from '../../src/entity/Person';
 import { Organization } from '../../src/entity/Organization';
 import fetcher from '../../libs/fetcher'
 import {global} from '../../libs/global'
+import Axios from 'axios';
+import { Contact } from '../../src/entity/Contact';
 // interface Props {
 //     email: string
 // }
@@ -41,9 +43,16 @@ interface Props {
   organzations: Array<OrganizationProps>
   person: Person
 }
+
+interface IContact{
+  job_title:string,
+  email:string,
+  country:string,
+  state: string
+}
 const PersonForm = (p : Props)=>{
 
-    
+    var rows:IContact[]=[]
     const classes = useStyles();
     const [title, setTitle] = useState<string>(p.person.title?p.person.title:"");
     const [firstname, setFirstname] = useState<string>(p.person.first_name);
@@ -55,16 +64,27 @@ const PersonForm = (p : Props)=>{
     const [message, setMessage] = useState<string>("");
     const [error, setError] = useState< "info" | "success" | "warning" | "error" >('info');
     const [open, setOpen] = React.useState(false);
+    var ncontact = new Contact()
     const handleChange = (event: React.ChangeEvent<{ value: unknown }>) => {
         setTitle(event.target.value as string);
       };
-      console.log(p.person)
-      console.log("====================")
-      console.log(belongOrg)
+
+    useEffect(()=>{
+      Axios.get(`/api/contact/${p.person.id}`).then(res=>{
+        if(res.status===200){
+            rows=res.data
+            console.log("++++get data++++")
+            console.log(rows)
+        }
+      })
+    })
+
     const ChangeOrg = (_e: ChangeEvent<{}>, value: OrganizationProps|null, _reason: AutocompleteChangeReason)=>{
       const index=_.findIndex(p.organzations, (nv)=>nv.id === value?.id)
       setbelongOrg(p.organzations[index])
   }
+
+
     
     const handleCOVID19 = (event: React.ChangeEvent<HTMLInputElement>) => {
         setCOVID19(event.target.checked)
@@ -81,6 +101,10 @@ const PersonForm = (p : Props)=>{
     }
     const handleChangeIntroduction= (e:ChangeEvent<HTMLInputElement>)=>{
       setIntroduction(e.target.value)
+    }
+
+    const handleClose =()=>{
+      setOpen(false)
     }
 
     const HandleSubmit=async ()=>{
@@ -178,9 +202,56 @@ const PersonForm = (p : Props)=>{
                       Submit Change
                     </Button>
                     </Grid>
+                    <Grid item xs={10}>
+    <TableContainer component={Paper}>
+      <button type="button" >
+        Add Contact
+      </button>
+
+      <Dialog onClose={handleClose} aria-labelledby="simple-dialog-title" open={open}>
+        <DialogTitle >Input Address details</DialogTitle>
+        <DialogContent>
+        <Formik initialValues={ncontact} onSubmit={(values, formikHelpers)=>{
+          return fetch('/api/')
+        }}>
+        {({ values})=>(
+          <Form>
+            <Field name="job_title" as={TextField} label="Input Job title"></Field>
+            <Field name="email" as={TextField} label="Input email"></Field>
+            <Field name="state" as={TextField} label="Input state"></Field>
+            <Field name="country" as={TextField} label="Input country"></Field>
+          </Form>
+        )}
+        </Formik>
+        </DialogContent>
+      </Dialog>
+      <Table aria-label="simple table">
+        <TableHead>
+          <TableRow>
+            <TableCell>jobTitle</TableCell>
+            <TableCell align="right">email</TableCell>
+            <TableCell align="right">Country</TableCell>
+            <TableCell align="right">state</TableCell>
+          </TableRow>
+        </TableHead>
+        <TableBody>
+          {rows.map((row) => (
+            <TableRow key={row.email}>
+              <TableCell component="th" scope="row">
+                {row.job_title}
+              </TableCell>
+              <TableCell align="right">{row.email}</TableCell>
+              <TableCell align="right">{row.country}</TableCell>
+              <TableCell align="right">{row.state}</TableCell>
+            </TableRow>
+          ))}
+        </TableBody>
+      </Table>
+    </TableContainer>
+     </Grid>
 
                    
-                </Grid>
+    </Grid>
         </div>
     )
 
@@ -219,15 +290,13 @@ export const getServerSideProps = async (ctx: NextPageContext) => {
     // console.log(repeo)
     console.log("--------------------")
     if(userId){
-      presult = await prep.findOne({where: {user: userId}})
+      presult = await prep.findOne({where: {user: userId}, relations: ["belong_organization"]})
       console.log(presult)
       console.log(await presult?.belong_organization)
     }
     person = presult? presult: new Person().generation(userId)
     console.log("+++++++++++++++")
     console.log(toPrint(person))
-    // console.log(db.entityMetadatas)
-    // const result = await db.getRepository(Organization).find({where: {status: "active"}})
     console.log("======llll==============")
     console.log(person.toJSON({user: userId}))
     for (let ri of result){
