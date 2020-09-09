@@ -33,8 +33,8 @@ handler
             result.createby = createby
             result.mailext = mailext
             result.member = member?member:result.member
-            rep.save(result)
-            res.status(200).json(result)
+            const ret = await rep.save(result)
+            res.status(200).json(ret)
         }else{
             res.status(404).json({"messge": "cannot find the organization"})
         }

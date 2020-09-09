@@ -24,13 +24,18 @@ export async function validate(user: User, pw: string){
 }
 
 export const decodeAuthCookie = (cookiestr: string)=>{
+    console.log(cookiestr)
     if(cookiestr.length==0)return new User()
     const mycookie = parse(cookiestr)
-    const decode = verify(mycookie.auth, GUID) as {id: string, role: UserRole, email: string}
-    const {id, role, email} = decode
-    const user = new User()
-    user.id=id
-    user.role=role
-    user.email=email
-    return user
+    if(mycookie.auth){
+        const decode = verify(mycookie.auth, GUID) as {id: string, role: UserRole, email: string}
+        const {id, role, email} = decode
+        const user = new User()
+        user.id=id
+        user.role=role
+        user.email=email
+        return user
+    }else{
+        return new User()
+    }
 }

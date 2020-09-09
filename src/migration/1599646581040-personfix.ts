@@ -1,15 +1,9 @@
 import {MigrationInterface, QueryRunner} from "typeorm";
 
-export class changePerson1599544102554 implements MigrationInterface {
-    name = 'changePerson1599544102554'
+export class personfix1599646581040 implements MigrationInterface {
+    name = 'personfix1599646581040'
 
     public async up(queryRunner: QueryRunner): Promise<void> {
-        await queryRunner.query("ALTER TABLE `contact` DROP COLUMN `title`");
-        await queryRunner.query("ALTER TABLE `contact` DROP COLUMN `first_name`");
-        await queryRunner.query("ALTER TABLE `contact` DROP COLUMN `last_name`");
-        await queryRunner.query("ALTER TABLE `person` ADD `title` enum ('Mr', 'Miss', 'Dr', 'Mrs', 'Ms', '') NOT NULL DEFAULT ''");
-        await queryRunner.query("ALTER TABLE `person` ADD `first_name` varchar(255) NOT NULL");
-        await queryRunner.query("ALTER TABLE `person` ADD `last_name` varchar(255) NOT NULL");
         await queryRunner.query("ALTER TABLE `project` DROP FOREIGN KEY `FK_b18f6960a7b74319aba20ae140a`");
         await queryRunner.query("ALTER TABLE `project` DROP FOREIGN KEY `FK_0028dfadf312a1d7f51656c4a9a`");
         await queryRunner.query("ALTER TABLE `project` CHANGE `contactId` `contactId` varchar(36) NULL");
@@ -46,27 +40,21 @@ export class changePerson1599544102554 implements MigrationInterface {
         await queryRunner.query("ALTER TABLE `project` DROP FOREIGN KEY `FK_0028dfadf312a1d7f51656c4a9a`");
         await queryRunner.query("ALTER TABLE `project` DROP FOREIGN KEY `FK_b18f6960a7b74319aba20ae140a`");
         await queryRunner.query("ALTER TABLE `contact` CHANGE `personId` `personId` varchar(36) NULL DEFAULT 'NULL'");
-        await queryRunner.query("ALTER TABLE `contact` ADD CONSTRAINT `FK_a355360156dc34d5afff56aa47e` FOREIGN KEY (`personId`, `personId`) REFERENCES `person`(`id`,`id`) ON DELETE NO ACTION ON UPDATE NO ACTION");
+        await queryRunner.query("ALTER TABLE `contact` ADD CONSTRAINT `FK_a355360156dc34d5afff56aa47e` FOREIGN KEY (`personId`, `personId`, `personId`) REFERENCES `person`(`id`,`id`,`id`) ON DELETE NO ACTION ON UPDATE NO ACTION");
         await queryRunner.query("ALTER TABLE `person` CHANGE `belongOrganizationId` `belongOrganizationId` varchar(36) NULL DEFAULT 'NULL'");
         await queryRunner.query("ALTER TABLE `person` CHANGE `userId` `userId` varchar(36) NULL DEFAULT 'NULL'");
-        await queryRunner.query("ALTER TABLE `person` ADD CONSTRAINT `FK_affb4875fc39715b67d0e5bc82f` FOREIGN KEY (`belongOrganizationId`, `belongOrganizationId`) REFERENCES `organization`(`id`,`id`) ON DELETE NO ACTION ON UPDATE NO ACTION");
-        await queryRunner.query("ALTER TABLE `person` ADD CONSTRAINT `FK_83b775da14886d352de2a4cac01` FOREIGN KEY (`userId`, `userId`) REFERENCES `user`(`id`,`id`) ON DELETE NO ACTION ON UPDATE NO ACTION");
+        await queryRunner.query("ALTER TABLE `person` ADD CONSTRAINT `FK_affb4875fc39715b67d0e5bc82f` FOREIGN KEY (`belongOrganizationId`, `belongOrganizationId`, `belongOrganizationId`) REFERENCES `organization`(`id`,`id`,`id`) ON DELETE NO ACTION ON UPDATE NO ACTION");
+        await queryRunner.query("ALTER TABLE `person` ADD CONSTRAINT `FK_83b775da14886d352de2a4cac01` FOREIGN KEY (`userId`, `userId`, `userId`) REFERENCES `user`(`id`,`id`,`id`) ON DELETE NO ACTION ON UPDATE NO ACTION");
         await queryRunner.query("ALTER TABLE `organization` CHANGE `createbyId` `createbyId` varchar(36) NULL DEFAULT 'NULL'");
-        await queryRunner.query("ALTER TABLE `organization` ADD CONSTRAINT `FK_d5521fc5e96a00879eb3d137b9e` FOREIGN KEY (`createbyId`, `createbyId`) REFERENCES `user`(`id`,`id`) ON DELETE NO ACTION ON UPDATE NO ACTION");
+        await queryRunner.query("ALTER TABLE `organization` ADD CONSTRAINT `FK_d5521fc5e96a00879eb3d137b9e` FOREIGN KEY (`createbyId`, `createbyId`, `createbyId`) REFERENCES `user`(`id`,`id`,`id`) ON DELETE NO ACTION ON UPDATE NO ACTION");
         await queryRunner.query("ALTER TABLE `technology` CHANGE `contactId` `contactId` varchar(36) NULL DEFAULT 'NULL'");
         await queryRunner.query("ALTER TABLE `technology` CHANGE `organizationId` `organizationId` varchar(36) NULL DEFAULT 'NULL'");
-        await queryRunner.query("ALTER TABLE `technology` ADD CONSTRAINT `FK_2cc174c7fcb7713745dbda578d6` FOREIGN KEY (`contactId`, `contactId`) REFERENCES `contact`(`id`,`id`) ON DELETE NO ACTION ON UPDATE NO ACTION");
-        await queryRunner.query("ALTER TABLE `technology` ADD CONSTRAINT `FK_5af76634d4e509c9dd25662eb0c` FOREIGN KEY (`organizationId`, `organizationId`) REFERENCES `organization`(`id`,`id`) ON DELETE NO ACTION ON UPDATE NO ACTION");
+        await queryRunner.query("ALTER TABLE `technology` ADD CONSTRAINT `FK_2cc174c7fcb7713745dbda578d6` FOREIGN KEY (`contactId`, `contactId`, `contactId`) REFERENCES `contact`(`id`,`id`,`id`) ON DELETE NO ACTION ON UPDATE NO ACTION");
+        await queryRunner.query("ALTER TABLE `technology` ADD CONSTRAINT `FK_5af76634d4e509c9dd25662eb0c` FOREIGN KEY (`organizationId`, `organizationId`, `organizationId`) REFERENCES `organization`(`id`,`id`,`id`) ON DELETE NO ACTION ON UPDATE NO ACTION");
         await queryRunner.query("ALTER TABLE `project` CHANGE `organizationId` `organizationId` varchar(36) NULL DEFAULT 'NULL'");
         await queryRunner.query("ALTER TABLE `project` CHANGE `contactId` `contactId` varchar(36) NULL DEFAULT 'NULL'");
-        await queryRunner.query("ALTER TABLE `project` ADD CONSTRAINT `FK_0028dfadf312a1d7f51656c4a9a` FOREIGN KEY (`organizationId`, `organizationId`) REFERENCES `organization`(`id`,`id`) ON DELETE NO ACTION ON UPDATE NO ACTION");
-        await queryRunner.query("ALTER TABLE `project` ADD CONSTRAINT `FK_b18f6960a7b74319aba20ae140a` FOREIGN KEY (`contactId`, `contactId`) REFERENCES `contact`(`id`,`id`) ON DELETE NO ACTION ON UPDATE NO ACTION");
-        await queryRunner.query("ALTER TABLE `person` DROP COLUMN `last_name`");
-        await queryRunner.query("ALTER TABLE `person` DROP COLUMN `first_name`");
-        await queryRunner.query("ALTER TABLE `person` DROP COLUMN `title`");
-        await queryRunner.query("ALTER TABLE `contact` ADD `last_name` varchar(255) NOT NULL");
-        await queryRunner.query("ALTER TABLE `contact` ADD `first_name` varchar(255) NOT NULL");
-        await queryRunner.query("ALTER TABLE `contact` ADD `title` enum ('Mr', 'Miss', 'Dr', 'Mrs', 'Ms', '') NOT NULL DEFAULT ''''");
+        await queryRunner.query("ALTER TABLE `project` ADD CONSTRAINT `FK_0028dfadf312a1d7f51656c4a9a` FOREIGN KEY (`organizationId`, `organizationId`, `organizationId`) REFERENCES `organization`(`id`,`id`,`id`) ON DELETE NO ACTION ON UPDATE NO ACTION");
+        await queryRunner.query("ALTER TABLE `project` ADD CONSTRAINT `FK_b18f6960a7b74319aba20ae140a` FOREIGN KEY (`contactId`, `contactId`, `contactId`) REFERENCES `contact`(`id`,`id`,`id`) ON DELETE NO ACTION ON UPDATE NO ACTION");
     }
 
 }

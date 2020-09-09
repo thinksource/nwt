@@ -1,4 +1,4 @@
-import {Entity, PrimaryGeneratedColumn, Column, Index, BeforeInsert} from "typeorm";
+import {Entity, PrimaryGeneratedColumn, Column, Index, BeforeInsert, BaseEntity} from "typeorm";
 import crypto from 'crypto';
 import _ from 'lodash';
 // export type UserState = "active" | "deactive"
@@ -12,7 +12,7 @@ export const pwhash = (contents: string, salt: string) => crypto.pbkdf2Sync(cont
 
 
 @Entity({name: 'user'})
-export class User {
+export class User extends BaseEntity{
 
     @PrimaryGeneratedColumn('uuid')
     id!: string;

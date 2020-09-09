@@ -17,7 +17,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
     if (result){
          res.json(result)
     }else{
-        res.json(new Person().toJSON())
+        res.json(new Person().toJSON({}))
     }
    }
 

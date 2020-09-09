@@ -1,6 +1,8 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { makeStyles, Theme, createStyles } from '@material-ui/core/styles';
 import Modal from '@material-ui/core/Modal';
+import { Dialog, DialogTitle, Paper, Table, TableBody, TableCell, TableContainer, TableHead, TableRow } from '@material-ui/core';
+import Axios from 'axios';
 
 function rand() {
   return Math.round(Math.random() * 20) - 10;
@@ -31,7 +33,8 @@ const useStyles = makeStyles((theme: Theme) =>
 );
 
 interface Props{
-    name: string
+    title: string,
+    personid: string
 }
 
 export default function SimpleModal(props: Props) {
@@ -52,12 +55,15 @@ export default function SimpleModal(props: Props) {
   };
 
   const handleAddContact = ()=>{
-      
+    setOpen(false);
   }
+
+  useEffect(async ()=>{
+    const result = await Axios.get(`/api/contact/${props.personid}`)
+  })
 
   const body = (
     <div style={modalStyle} className={classes.paper}>
-      <h2>New Contact for {props.name}</h2>
       <p >
         <label>Job Title:</label>
         <input type="text" value={jobTitle}></input>
@@ -71,7 +77,7 @@ export default function SimpleModal(props: Props) {
         <input type="text" value={country}></input>
       </p>
       <p >
-        <label>state</label>
+        <label>state:</label>
         <input type="text" value={state}></input>
       </p>
       <button onClick={handleAddContact}>add contact</button>
@@ -80,17 +86,41 @@ export default function SimpleModal(props: Props) {
 
   return (
     <div>
-      <button type="button" onClick={handleOpen}>
-        Open Modal
-      </button>
-      <Modal
-        open={open}
-        onClose={handleClose}
-        aria-labelledby="simple-modal-title"
-        aria-describedby="simple-modal-description"
-      >
+
+      <Dialog onClose={handleClose} aria-labelledby="simple-dialog-title" open={open}>
+        <DialogTitle >{props.title}</DialogTitle>
         {body}
-      </Modal>
+      </Dialog>
+
+      <TableContainer component={Paper}>
+      <button type="button" onClick={handleOpen}>
+        Add Contact
+      </button>
+      <Table aria-label="simple table">
+        <TableHead>
+          <TableRow>
+            <TableCell>Dessert (100g serving)</TableCell>
+            <TableCell align="right">Calories</TableCell>
+            <TableCell align="right">Fat&nbsp;(g)</TableCell>
+            <TableCell align="right">Carbs&nbsp;(g)</TableCell>
+            <TableCell align="right">Protein&nbsp;(g)</TableCell>
+          </TableRow>
+        </TableHead>
+        <TableBody>
+          {rows.map((row) => (
+            <TableRow key={row.name}>
+              <TableCell component="th" scope="row">
+                {row.name}
+              </TableCell>
+              <TableCell align="right">{row.calories}</TableCell>
+              <TableCell align="right">{row.fat}</TableCell>
+              <TableCell align="right">{row.carbs}</TableCell>
+              <TableCell align="right">{row.protein}</TableCell>
+            </TableRow>
+          ))}
+        </TableBody>
+      </Table>
+    </TableContainer>
     </div>
   );
 }

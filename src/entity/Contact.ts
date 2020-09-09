@@ -1,10 +1,10 @@
-import {Entity, Column, ManyToOne, PrimaryGeneratedColumn} from "typeorm";
+import {Entity, Column, ManyToOne, PrimaryGeneratedColumn, BaseEntity} from "typeorm";
 import { Person } from "./Person";
 
 
 
 @Entity()
-export class Contact {
+export class Contact extends BaseEntity {
     @PrimaryGeneratedColumn('uuid')
     id!: string;
     
@@ -15,9 +15,6 @@ export class Contact {
 
     @Column('varchar')
     email!: string;
-
-    @Column('tinyint')
-    member!: boolean;
 
     @Column('varchar')
     country!: string;

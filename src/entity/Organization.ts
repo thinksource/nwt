@@ -1,11 +1,11 @@
-import {Entity, Column, PrimaryGeneratedColumn, ManyToOne, OneToMany, BeforeInsert} from "typeorm";
+import {Entity, Column, PrimaryGeneratedColumn, ManyToOne, OneToMany, BeforeInsert, BaseEntity} from "typeorm";
 import { User } from "./User";
 import { Person } from "./Person";
 import { Project } from "./Project";
 import { Technology } from "./Technology";
 import _ from 'lodash';
 @Entity({name: 'organization'})
-export class Organization {
+export class Organization extends BaseEntity {
     @PrimaryGeneratedColumn('uuid')
     id!: string;
 

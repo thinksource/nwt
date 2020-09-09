@@ -8,6 +8,9 @@
 //       body: JSON.stringify({a: 1, b: 'Textual content'})
 //     });
 //     const content = await rawResponse.json();
+
+import Axios, { Method } from "axios"
+
   
 //     console.log(content);
 //   })();
@@ -23,3 +26,12 @@
 //     return {message: res.data}    
 //   }
 // }
+
+export default (method: Method, headers?: Object, body={})=>{
+    headers = Object.assign({'Content-Type': 'application/json'}, headers)
+
+    return async (url:string)=>{
+        const re = await Axios(url, {method, headers,data:body})
+        return re
+    }
+} 

@@ -10,26 +10,22 @@ const Signup = () => {
 
   function handleSubmit(e: FormEvent) {
     e.preventDefault();
+    const json = JSON.stringify({email,password,passwordConfirmation});
     fetch('/api/user/signup', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
       },
-      body: JSON.stringify({
-        email,
-        password,
-        passwordConfirmation
-      }),
+      body: JSON.stringify({email,password,passwordConfirmation}),
     })
       .then((r) => r.json())
       .then((data) => {
         if (data && data.error) {
           setSignupError(data.message);
         }
-        if (data && data.token) {
-          //set cookie
-          console.log(data)
-          //cookie.set('token', data.token, {expires: 2});
+        if (data && data.id) {
+          console.log()
+          setSignupError("Sign Up successful")
           Router.push('/login');
         }
       });

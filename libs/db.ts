@@ -17,7 +17,7 @@ const options: MysqlConnectionOptions = {
     "port": 3306,
     "username": "admin",
     "password": "password",
-    "database": "dyform",
+    "database": "newdata",
     "synchronize": true,
     "logging": false,
     "entities": [User, Contact, Person, Organization, Project,Technology]

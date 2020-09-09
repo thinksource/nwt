@@ -1,9 +1,9 @@
-import {Entity, Column, PrimaryGeneratedColumn, ManyToOne, OneToOne, JoinColumn} from "typeorm";
+import {Entity, Column, PrimaryGeneratedColumn, ManyToOne, OneToOne, JoinColumn, BaseEntity} from "typeorm";
 import { Organization } from "./Organization";
 import { Contact } from "./Contact";
 
 @Entity()
-export class Technology {
+export class Technology extends BaseEntity{
     
     @PrimaryGeneratedColumn('uuid')
     id!: string;

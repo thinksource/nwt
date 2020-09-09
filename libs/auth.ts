@@ -10,7 +10,7 @@ import {global} from './global'
 
 const TOKEN_NAME = 'auth'
 export const GUID ='274a5db6-334f-41b8-a87c-2609bc69e94e'
-type middleFunction = (req: IncomingMessage, res:NextApiResponse, next: NextHandler)=>void
+type middleFunction = (req: NextApiRequest, res:NextApiResponse, next: NextHandler)=>void
 
 export function setAuthCookie(res: NextApiResponse, token: Object){
     const jwt = sign(token, GUID, {expiresIn: '2h'})
@@ -163,7 +163,8 @@ export class myRequest{
 }
 
 export function authByRole(roles: UserRole[]):middleFunction{
-    return (req: IncomingMessage, res:NextApiResponse, next: NextHandler)=>{
+    var sameuser = false
+    return (req: NextApiRequest, res:NextApiResponse, next: NextHandler)=>{
       const cookiestr=req.headers?.cookie
       if(cookiestr){
         try{
@@ -171,7 +172,12 @@ export function authByRole(roles: UserRole[]):middleFunction{
           const decode = verify(cookieobj[TOKEN_NAME], GUID)
           
           const djson = JSON.parse(JSON.stringify(decode))
-          if(djson && roles.indexOf(djson.role)>=0){
+          if(req.body && req.body.userId){
+            if(djson.id == req.body.userId){
+              sameuser = true
+            }
+          }
+          if((djson && roles.indexOf(djson.role)>=0) || sameuser){
             next()
           }else{
             res.status(401).json({message: 'User do not have right to visit this page'})

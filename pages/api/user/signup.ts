@@ -8,9 +8,10 @@ import { validate } from '../../../libs/user';
 import handler from '../../../libs/handler'
 
   handler.post(async (req, res)=>{
-    console.log(req.query)
-    const {email, password, passwordConfirmation} = req.body;
-    let db = (await getDatabaseConnection()).manager;
+    console.log(req.body)
+    const {email, password, passwordConfirmation} = req.body
+    console.log(email)
+    let db = (await getDatabaseConnection()).getRepository<User>('user');
     const user : User = new User()
     if (!email || !password || !passwordConfirmation){
         
@@ -24,7 +25,7 @@ import handler from '../../../libs/handler'
         if (await validate(user, passwordConfirmation)){
             console.log("saving now")
             console.log(user)
-            const result=await db.save<User>(user)
+            const result=await db.save(user)
             res.status(200).json(result)
         }else{
             res.status(400).json(

@@ -45,7 +45,7 @@ const ProfileButton =(props: NavProps)=>{
       open={Boolean(anchorEl)}
       onClose={handleClose}>
       <MenuItem onClick={handleClose}>
-        <Link href="/person">
+        <Link href={`/person/${props.userId}`}>
           <a>Profile</a>
         </Link>
         </MenuItem>
