@@ -54,6 +54,15 @@ export class Organization extends BaseEntity {
         this.project = []
     }
 
+    generate(){
+        this.name = ""
+        this.mailext=[]
+        this.website=""
+        this.status = "incative"
+        this.brief=""
+        return this
+    }
+
     toSimpleJSON(){
         return _.pick(this, ['id', 'name', 'website'])
     }

@@ -1,6 +1,7 @@
 import {Entity, PrimaryGeneratedColumn, Column, ManyToOne, OneToOne, JoinColumn, BaseEntity } from "typeorm";
 import { Organization } from "./Organization";
 import { Contact } from "./Contact";
+import { User } from "./User";
 
 @Entity()
 export class Project extends BaseEntity{
@@ -28,6 +29,10 @@ export class Project extends BaseEntity{
 
     @Column('date')
     end!: Date;
+
+    @ManyToOne(() => User, u => u.projects)
+    creatby!: User
+
 
     // @Column('createby')
     // createby: User

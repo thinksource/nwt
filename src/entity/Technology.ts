@@ -1,6 +1,7 @@
 import {Entity, Column, PrimaryGeneratedColumn, ManyToOne, OneToOne, JoinColumn, BaseEntity} from "typeorm";
 import { Organization } from "./Organization";
 import { Contact } from "./Contact";
+import { User } from "./User";
 
 @Entity()
 export class Technology extends BaseEntity{
@@ -22,6 +23,9 @@ export class Technology extends BaseEntity{
 
     @ManyToOne(() => Organization, org => org.technology)
     organization!: Organization;
+
+    @ManyToOne(() => User, u => u.technologys)
+    creatby!: User
 
     @OneToOne(() => Contact)
     @JoinColumn()

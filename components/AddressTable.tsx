@@ -1,7 +1,7 @@
 import React, { useEffect } from 'react';
 import { makeStyles, Theme, createStyles } from '@material-ui/core/styles';
 import Modal from '@material-ui/core/Modal';
-import { Dialog, DialogTitle, Paper, Table, TableBody, TableCell, TableContainer, TableHead, TableRow } from '@material-ui/core';
+import { Dialog, DialogContent, DialogTitle, Paper, Table, TableBody, TableCell, TableContainer, TableHead, TableRow } from '@material-ui/core';
 import Axios from 'axios';
 
 function rand() {
@@ -74,7 +74,6 @@ export default function SimpleModal(props:Props) {
   })
 
   const body = (
-    <DialogTitle >{props.title}</DialogTitle>
     <div style={modalStyle} className={classes.paper}>
       <p >
         <label>Job Title:</label>
@@ -100,8 +99,10 @@ export default function SimpleModal(props:Props) {
     <div>
 
       <Dialog onClose={handleClose} aria-labelledby="simple-dialog-title" open={open}>
-       
+        <DialogTitle >{props.title}</DialogTitle>
+        <DialogContent>
         {body}
+        </DialogContent>
       </Dialog>
 
 

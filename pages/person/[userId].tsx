@@ -1,6 +1,6 @@
 import React, { useState, ChangeEvent, useEffect } from 'react';
 import { Typography, Grid, Select, MenuItem, TextField, FormControlLabel, Switch, NativeSelect, makeStyles, Theme, createStyles, Paper, Button, TableContainer, Table, TableHead, TableRow, TableCell, TableBody, Dialog, DialogTitle, DialogContent } from '@material-ui/core';
-import { Formik, Form, Field} from 'formik'
+import { Formik, Form, Field, FormikHelpers} from 'formik'
 import { authenticated } from '../../libs/auth';
 import { NextPageContext, GetServerSideProps, GetServerSidePropsResult } from 'next';
 import { getDatabaseConnection } from '../../libs/db';
@@ -59,7 +59,7 @@ const PersonForm = (p : Props)=>{
     const [lastname, setLastname] = useState<string>(p.person.last_name);
     const [clinical_exp, setClinicalExp] = useState<string[]>(p.person.expertise?p.person.expertise:[]);
     const [COVID19, setCOVID19] = useState<Boolean>(p.person.COVID_19);
-    const [belongOrg, setbelongOrg] = useState<OrganizationProps>(p.person.belong_organization);
+    const [belongOrg, setbelongOrg] = useState<OrganizationProps>(p.person.belong_organization?p.person.belong_organization: new Organization().generate());
     const [introduction, setIntroduction] = useState<string>(p.person.introduction)
     const [message, setMessage] = useState<string>("");
     const [error, setError] = useState< "info" | "success" | "warning" | "error" >('info');
@@ -70,6 +70,7 @@ const PersonForm = (p : Props)=>{
       };
 
     useEffect(()=>{
+      console.log(`/api/contact/${p.person.id}`)
       Axios.get(`/api/contact/${p.person.id}`).then(res=>{
         if(res.status===200){
             rows=res.data
@@ -105,6 +106,20 @@ const PersonForm = (p : Props)=>{
 
     const handleClose =()=>{
       setOpen(false)
+    }
+
+    const handleOpen =()=>{
+      setOpen(true)
+    }
+
+    const handleAddContact= async (values: Contact, formikHelpers: FormikHelpers<Contact>)=>{
+      const t= Object.assign(values, {personId: p.person.id})
+      const myfetch =fetcher('post', {"Cookies": global.authcookie}, t)
+      const result= await myfetch('/api/contact/update')
+      if(result.status ===200){
+        setMessage("Update successful")
+        setError("success")
+      }
     }
 
     const HandleSubmit=async ()=>{
@@ -204,22 +219,21 @@ const PersonForm = (p : Props)=>{
                     </Grid>
                     <Grid item xs={10}>
     <TableContainer component={Paper}>
-      <button type="button" >
+      <button type="button" onClick={handleOpen}>
         Add Contact
       </button>
 
       <Dialog onClose={handleClose} aria-labelledby="simple-dialog-title" open={open}>
         <DialogTitle >Input Address details</DialogTitle>
         <DialogContent>
-        <Formik initialValues={ncontact} onSubmit={(values, formikHelpers)=>{
-          return fetch('/api/')
-        }}>
+        <Formik initialValues={ncontact} onSubmit={handleAddContact}>
         {({ values})=>(
           <Form>
             <Field name="job_title" as={TextField} label="Input Job title"></Field>
             <Field name="email" as={TextField} label="Input email"></Field>
             <Field name="state" as={TextField} label="Input state"></Field>
             <Field name="country" as={TextField} label="Input country"></Field>
+            <button type="submit">Submit</button>
           </Form>
         )}
         </Formik>

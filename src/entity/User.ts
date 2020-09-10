@@ -1,6 +1,8 @@
-import {Entity, PrimaryGeneratedColumn, Column, Index, BeforeInsert, BaseEntity} from "typeorm";
+import {Entity, PrimaryGeneratedColumn, Column, Index, BeforeInsert, BaseEntity, OneToMany} from "typeorm";
 import crypto from 'crypto';
 import _ from 'lodash';
+import { Project } from "./Project";
+import { Technology } from "./Technology";
 // export type UserState = "active" | "deactive"
 export enum UserRole {
     admin = "admin",
@@ -33,6 +35,13 @@ export class User extends BaseEntity{
 
     @Column('varchar')
     salt!: string;
+
+    @OneToMany(()=>Project, p=>p.creatby)
+    projects?: Project
+
+
+    @OneToMany(()=>Technology, p=>p.creatby)
+    technologys?: Technology
 
     errors?: string[];
 

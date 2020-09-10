@@ -1,6 +1,6 @@
 import {Entity, Column, ManyToOne, PrimaryGeneratedColumn, BaseEntity} from "typeorm";
 import { Person } from "./Person";
-
+import _ from 'lodash';
 
 
 @Entity()
@@ -24,4 +24,9 @@ export class Contact extends BaseEntity {
 
     @ManyToOne(() => Person, p => p.contact)
     person!: Person;
+
+    toJSON(){
+        _.omit(this, ['person'])
+    }
+
 }

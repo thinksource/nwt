@@ -9,6 +9,7 @@
     "axios": "^0.20.0",
     "clsx": "latest",
     "cookie": "^0.4.1",
+    "flatted": "^3.0.4",
     "formik": "^2.1.5",
     "isomorphic-unfetch": "^3.0.0",
     "jsonwebtoken": "^8.5.1",
