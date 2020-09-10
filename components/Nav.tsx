@@ -165,16 +165,26 @@ export const Nav = ()=> {
         open={Boolean(anchorEl)}
         onClose={handleClose}>
         <MenuItem onClick={handleClose}>
-          <Link href="/person">
-            <a>Personal Profile</a>
+          <Link href={`/project/${user.id}`}>
+            <a>Manage Projects</a>
           </Link>
           </MenuItem>
-        <MenuItem onClick={handleClose}>          
-          <Link href = {`/user/${user.id}`}>
-            <a>My account</a>
+        
+      </Menu>
+      <Button aria-controls="simple-menu" aria-haspopup="true" onClick={handleClick}>
+        Technology
+      </Button>
+      <Menu
+        id="simple-menu"
+        anchorEl={anchorEl}
+        keepMounted
+        open={Boolean(anchorEl)}
+        onClose={handleClose}>
+        <MenuItem onClick={handleClose}>
+          <Link href={`/technoloy/${user.id}`}>
+            <a>Manage technology</a>
           </Link>
-        </MenuItem>
-        <MenuItem onClick={handleClose}>Logout</MenuItem>
+          </MenuItem>
       </Menu>
       <OrgButton userId={user.id} userRole={user.role} email={user.email}></OrgButton>
       <ProfileButton userId={user.id} userRole={user.role} email={user.email}></ProfileButton>

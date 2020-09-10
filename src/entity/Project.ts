@@ -8,8 +8,11 @@ export class Project extends BaseEntity{
     @PrimaryGeneratedColumn('uuid')
     id!: string;
 
+    @Column("varchar")
+    name!: string;
+
     @Column("varchar",{length: 1000})
-    expertise_required?: string;
+    brief?: string;
 
     @Column("simple-array")
     clinical_expertise?: string[];
