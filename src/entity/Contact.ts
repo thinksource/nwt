@@ -26,7 +26,8 @@ export class Contact extends BaseEntity {
     person!: Person;
 
     toJSON(){
-        _.omit(this, ['person'])
+        var tmp = _.omit(this, ['person'])
+        return _.pickBy(tmp, v => (v !== undefined && typeof v!== "function"))
     }
 
 }

@@ -52,7 +52,6 @@ interface IContact{
 }
 const PersonForm = (p : Props)=>{
 
-    var rows:IContact[]=[]
     const classes = useStyles();
     const [title, setTitle] = useState<string>(p.person.title?p.person.title:"");
     const [firstname, setFirstname] = useState<string>(p.person.first_name);
@@ -64,6 +63,7 @@ const PersonForm = (p : Props)=>{
     const [message, setMessage] = useState<string>("");
     const [error, setError] = useState< "info" | "success" | "warning" | "error" >('info');
     const [open, setOpen] = React.useState(false);
+    const [rows, setRows] = React.useState([]);
     var ncontact = new Contact()
     const handleChange = (event: React.ChangeEvent<{ value: unknown }>) => {
         setTitle(event.target.value as string);
@@ -73,12 +73,12 @@ const PersonForm = (p : Props)=>{
       console.log(`/api/contact/${p.person.id}`)
       Axios.get(`/api/contact/${p.person.id}`).then(res=>{
         if(res.status===200){
-            rows=res.data
+            setRows(res.data)
             console.log("++++get data++++")
             console.log(rows)
         }
       })
-    })
+    }, [open])
 
     const ChangeOrg = (_e: ChangeEvent<{}>, value: OrganizationProps|null, _reason: AutocompleteChangeReason)=>{
       const index=_.findIndex(p.organzations, (nv)=>nv.id === value?.id)
