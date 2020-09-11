@@ -2,6 +2,7 @@ import { AppBar, Button, makeStyles, Toolbar, Typography, Menu, MenuItem} from '
 // import Link from 'next/link';
 import Link from 'next/link'
 import React from 'react';
+import ProjectForm from '../pages/project/update';
 
 import { useUser } from './UserProvider';
 // import { GUID, decodeAuthCookie } from '../libs/auth';
@@ -72,6 +73,43 @@ const ProfileButton =(props: NavProps)=>{
       </Button>
     )
   }
+}
+
+const ProjectButton = ()=>{
+  const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
+  const user = useUser()
+  const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
+    setAnchorEl(event.currentTarget);
+  };
+  const handleClose = () => {
+    setAnchorEl(null);
+  };
+  return (
+    <>
+    <Button aria-controls="simple-menu" aria-haspopup="true" onClick={handleClick}>
+        Project
+      </Button>
+      <Menu
+        id="menuproject"
+        anchorEl={anchorEl}
+        keepMounted
+        open={Boolean(anchorEl)}
+        onClose={handleClose}>
+
+        <MenuItem onClick={handleClose}>
+          <Link href={`/project/${user.id}`}>
+            <a>Manage Projects</a>
+          </Link>
+        </MenuItem>
+        <MenuItem onClick={handleClose}> 
+          <Link href={`/project/update`}>
+            <a>Register new project</a>
+          </Link>
+        </MenuItem>
+        
+      </Menu>
+    </>
+  )
 }
 
 const OrgButton =(props: NavProps)=>{
@@ -155,27 +193,12 @@ export const Nav = ()=> {
         </Button>
 
 
-      <Button aria-controls="simple-menu" aria-haspopup="true" onClick={handleClick}>
-        Project
-      </Button>
-      <Menu
-        id="simple-menu"
-        anchorEl={anchorEl}
-        keepMounted
-        open={Boolean(anchorEl)}
-        onClose={handleClose}>
-        <MenuItem onClick={handleClose}>
-          <Link href={`/project/${user.id}`}>
-            <a>Manage Projects</a>
-          </Link>
-          </MenuItem>
-        
-      </Menu>
+      <ProjectButton></ProjectButton>
       <Button aria-controls="simple-menu" aria-haspopup="true" onClick={handleClick}>
         Technology
       </Button>
       <Menu
-        id="simple-menu"
+        id="menutechnology"
         anchorEl={anchorEl}
         keepMounted
         open={Boolean(anchorEl)}

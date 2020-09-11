@@ -5,7 +5,6 @@ import { Typography, InputLabel, NativeSelect, FormHelperText, Portal,TextField,
 import { Formik, Form } from 'formik'
 import { NextPageContext } from 'next'
 import { useState, useRef } from 'react'
-import { decodeAuthCookie } from '../libs/auth'
 
 type ListDetailProps = {
   item: User

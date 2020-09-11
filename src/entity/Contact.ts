@@ -1,6 +1,7 @@
 import {Entity, Column, ManyToOne, PrimaryGeneratedColumn, BaseEntity} from "typeorm";
-import { Person } from "./Person";
+import { Person} from "./Person";
 import _ from 'lodash';
+import { PersonTitle } from "./util";
 
 
 @Entity()
@@ -8,7 +9,18 @@ export class Contact extends BaseEntity {
     @PrimaryGeneratedColumn('uuid')
     id!: string;
     
+    @Column({
+        type: "enum",
+        enum: PersonTitle,
+        default: PersonTitle.Blank
+        })
+    title?: string;
 
+    @Column({type: 'varchar', default: ''})
+    first_name!: string;
+
+    @Column('varchar')
+    last_name!: string;
 
     @Column('varchar')
     job_title!: string;

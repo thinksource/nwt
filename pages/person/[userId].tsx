@@ -1,5 +1,5 @@
 import React, { useState, ChangeEvent, useEffect } from 'react';
-import { Typography, Grid, Select, MenuItem, TextField, FormControlLabel, Switch, NativeSelect, makeStyles, Theme, createStyles, Paper, Button, TableContainer, Table, TableHead, TableRow, TableCell, TableBody, Dialog, DialogTitle, DialogContent } from '@material-ui/core';
+import { Typography, Grid, Select, MenuItem, TextField, FormControlLabel, Switch, NativeSelect, makeStyles, Theme, createStyles, Paper, Button, TableContainer, Table, TableHead, TableRow, TableCell, TableBody, Dialog, DialogTitle, DialogContent, InputLabel } from '@material-ui/core';
 import { Formik, Form, Field, FormikHelpers} from 'formik'
 import { authenticated } from '../../libs/auth';
 import { NextPageContext, GetServerSideProps, GetServerSidePropsResult } from 'next';
@@ -14,6 +14,7 @@ import fetcher from '../../libs/fetcher'
 import {global} from '../../libs/global'
 import Axios from 'axios';
 import { Contact } from '../../src/entity/Contact';
+import { TitleSelect } from '../../components/TitleSelect';
 // interface Props {
 //     email: string
 // }
@@ -45,6 +46,9 @@ interface Props {
 }
 
 interface IContact{
+  title: string,
+  first_name:string,
+  last_name: string,
   job_title:string,
   email:string,
   country:string,
@@ -63,7 +67,7 @@ const PersonForm = (p : Props)=>{
     const [message, setMessage] = useState<string>("");
     const [error, setError] = useState< "info" | "success" | "warning" | "error" >('info');
     const [open, setOpen] = React.useState(false);
-    const [rows, setRows] = React.useState([]);
+    const [rows, setRows] = React.useState([] as IContact[]);
     var ncontact = new Contact()
     const handleChange = (event: React.ChangeEvent<{ value: unknown }>) => {
         setTitle(event.target.value as string);
@@ -179,7 +183,7 @@ const PersonForm = (p : Props)=>{
                     <FormControlLabel
                     label="Clinical expertise"
                     control={
-                      <ArrayInput inputfields={clinical_exp} setInputFields={setClinicalExp} labeltext="keywords of experience"></ArrayInput>
+                      <ArrayInput value={clinical_exp} setValue={setClinicalExp} labeltext="keywords of experience"></ArrayInput>
                     }
                     
                     />
@@ -229,6 +233,10 @@ const PersonForm = (p : Props)=>{
         <Formik initialValues={ncontact} onSubmit={handleAddContact}>
         {({ values})=>(
           <Form>
+            <InputLabel htmlFor="title-native-helper">Age</InputLabel>
+            <Field name= "title" as={TitleSelect} className={classes.centalign}></Field>
+            <Field name="first_name" as={TextField} label="Input First Name"></Field>
+            <Field name="last_name" as={TextField} label="Input First Name"></Field>
             <Field name="job_title" as={TextField} label="Input Job title"></Field>
             <Field name="email" as={TextField} label="Input email"></Field>
             <Field name="state" as={TextField} label="Input state"></Field>
@@ -278,13 +286,6 @@ const PersonForm = (p : Props)=>{
 //     const json = res.json()
 //     return json
 // }
-const toPrint=(ob: Object)=>{
-  var t = _.pickBy(ob, v=>{
-    console.log(v, typeof v)
-    return (v !== undefined &&  typeof v !== "function")
-  })
-  return t
-}
 export const getServerSideProps = async (ctx: NextPageContext) => {
     let resultorg: OrganizationProps[] = []
     console.log(ctx.query)
@@ -302,7 +303,6 @@ export const getServerSideProps = async (ctx: NextPageContext) => {
     // .where("person.userid = :id", { id: userId })
     // .getOne();
     // console.log(repeo)
-    console.log("--------------------")
     if(userId){
       presult = await prep.findOne({where: {user: userId}, relations: ["belong_organization"]})
       console.log(presult)
@@ -310,8 +310,6 @@ export const getServerSideProps = async (ctx: NextPageContext) => {
     }
     person = presult? presult: new Person().generation(userId)
     console.log("+++++++++++++++")
-    console.log(toPrint(person))
-    console.log("======llll==============")
     console.log(person.toJSON({user: userId}))
     for (let ri of result){
         resultorg.push(ri.toSimpleJSON())

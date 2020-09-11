@@ -15,7 +15,7 @@ export class Project extends BaseEntity{
     brief?: string;
 
     @Column("simple-array")
-    clinical_expertise?: string[];
+    expertise?: string[];
 
     @Column('tinyint')
     COVID_19!: boolean;
@@ -24,8 +24,8 @@ export class Project extends BaseEntity{
     @JoinColumn()
     contact!: Contact;
 
-    @ManyToOne(() => Organization, org => org.project)
-    organization!: Organization;
+    @ManyToOne(() => Organization, org => org.project, {nullable: true})
+    organization?: Organization;
 
     @Column('date')
     start!: Date;
@@ -39,5 +39,17 @@ export class Project extends BaseEntity{
 
     // @Column('createby')
     // createby: User
+
+    constructor(){
+        const today = new Date()
+        super()
+        this.name=''
+        this.brief=''
+        this.expertise = []
+        this.COVID_19=false
+        this.organization
+        this.start = today
+        this.end = today
+    }
 
 }

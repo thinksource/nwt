@@ -4,15 +4,9 @@ import {Contact} from "./Contact";
 import { Organization } from "./Organization";
 import _ from 'lodash';
 import { v4 as uuidv4 } from 'uuid';
+import { PersonTitle } from "./util";
 
-export enum PersonTitle {
-    Mr = "Mr.",
-    Miss = "Miss",
-    Dr = "Dr.",
-    Mrs ="Mrs.",
-    Ms = "Ms.",
-    Blank = ""
-}
+
 
 @Entity({name: 'person'})
 export class Person extends BaseEntity {

@@ -5,7 +5,7 @@ import { UserRole } from "../src/entity/User";
 import cookie, { parse } from 'cookie';
 
 import  { NextHandler } from "next-connect";
-import { IncomingMessage } from "http";
+import { IncomingMessage, ServerResponse } from "http";
 import {global} from './global'
 
 const TOKEN_NAME = 'auth'
@@ -36,7 +36,7 @@ export function removeAuthCookie(res: NextApiResponse) {
   }
 
 
-export const decodeAuthCookie = (cookiestr: string)=>{
+export const decodeAuthCookie = ( cookiestr: string)=>{
     const mycookie = cookie.parse(cookiestr)
     const decode = verify(mycookie.auth, GUID) as {id: string, role: UserRole, email: string}
     const {id, role, email} = decode

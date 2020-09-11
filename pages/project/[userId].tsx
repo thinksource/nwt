@@ -78,7 +78,7 @@ export default function ProjectTable(props:Props) {
               </TableCell>
               <TableCell align="right">{row.creatby}</TableCell>
               <TableCell align="right">{row.COVID_19}</TableCell>
-              <TableCell align="right">{row.clinical_expertise?.join(",")}</TableCell>
+              <TableCell align="right">{row.expertise?.join(",")}</TableCell>
               <TableCell align="right">{row.start}</TableCell>
               <TableCell align="right">{row.end}</TableCell>
               <TableCell align="right"><button>delete</button></TableCell>

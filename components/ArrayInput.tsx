@@ -4,37 +4,37 @@ import {Dispatch, SetStateAction} from "react"
 
 import { useState, useEffect, ChangeEvent } from "react";
 export interface ArrayProps {
-    inputfields: string[],
+    value: string[],
     labeltext: string,
-    setInputFields: Dispatch<SetStateAction<string[]>>
+    setValue: Dispatch<SetStateAction<string[]>>
 }
 
 
 export const ArrayInput =(props: ArrayProps)=>{
-
-    var [fields, setFields]=useState<string[]>(props.inputfields);
+    console.log(props.value)
+    var [fields, setFields]=useState<string[]>(props.value?props.value:[]);
 
     const addfields=()=>{
-        const tmp = [...fields]
+        const tmp = fields?[...fields]:[]
         tmp.push("")
         setFields(tmp)
-        props.setInputFields(tmp)
+        props.setValue(tmp)
     }
     const removefields=()=>{
         const tmp = [...fields]
         tmp.pop()
         setFields(tmp)
-        props.setInputFields(tmp)
+        props.setValue(tmp)
     }
-    useEffect(()=>{
-        rendinglist()
-    }, [fields])
+    // useEffect(()=>{
+    //     rendinglist()
+    // }, [fields])
     
     const chnageInput=(index:number, value:string)=>{
         const tmp= [...fields]
         tmp[index]=value;
         setFields(tmp)
-        props.setInputFields(tmp)
+        props.setValue(tmp)
     }
     // const txtInput=(e: ChangeEvent<>)=>{
 
@@ -50,7 +50,7 @@ export const ArrayInput =(props: ArrayProps)=>{
         <button type="button" onClick={removefields}>
             remove 
         </button></p>
-        {fields.map((key, index)=>(<li><TextField label={props.labeltext} color="secondary" value={key} key={index} onChange={(val: ChangeEvent<HTMLInputElement>)=>{
+        {fields.map((key, index)=>(<li><TextField label={props.labeltext} color="secondary" value={key} key={`k${index}`} onChange={(val: ChangeEvent<HTMLInputElement>)=>{
             chnageInput(index, val.target.value)
             
         }}/></li>))}
