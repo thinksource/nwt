@@ -20,7 +20,7 @@ const OrgzForm = ()=>{
         setOstatus(e.currentTarget.value)
     }
     const handleSubmit=()=>{
-        const val = {createby: user.id, name, brief, ostatus, website, mailext}
+        const val = {createby: user.id, name, brief, ostatus, website, mailext, member}
         console.log(val)
         fetch('/api/org/update', { 
         method: 'POST',

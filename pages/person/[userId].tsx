@@ -1,7 +1,6 @@
 import React, { useState, ChangeEvent, useEffect } from 'react';
 import { Typography, Grid, Select, MenuItem, TextField, FormControlLabel, Switch, NativeSelect, makeStyles, Theme, createStyles, Paper, Button, TableContainer, Table, TableHead, TableRow, TableCell, TableBody, Dialog, DialogTitle, DialogContent, InputLabel } from '@material-ui/core';
 import { Formik, Form, Field, FormikHelpers} from 'formik'
-import { authenticated } from '../../libs/auth';
 import { NextPageContext, GetServerSideProps, GetServerSidePropsResult } from 'next';
 import { getDatabaseConnection } from '../../libs/db';
 import Alert from '@material-ui/lab/Alert';
@@ -15,6 +14,7 @@ import {global} from '../../libs/global'
 import Axios from 'axios';
 import { Contact } from '../../src/entity/Contact';
 import { TitleSelect } from '../../components/TitleSelect';
+import {stringify} from 'flatted';
 // interface Props {
 //     email: string
 // }
@@ -54,6 +54,8 @@ interface IContact{
   country:string,
   state: string
 }
+
+const cookieHeader = new Headers({"Cookies": global.authcookie})
 const PersonForm = (p : Props)=>{
 
     const classes = useStyles();
@@ -118,7 +120,7 @@ const PersonForm = (p : Props)=>{
 
     const handleAddContact= async (values: Contact, formikHelpers: FormikHelpers<Contact>)=>{
       const t= Object.assign(values, {personId: p.person.id})
-      const myfetch =fetcher('post', {"Cookies": global.authcookie}, t)
+      const myfetch =fetcher('post', cookieHeader, stringify(t))
       const result= await myfetch('/api/contact/update')
       if(result.status ===200){
         setMessage("Update successful")
@@ -133,9 +135,9 @@ const PersonForm = (p : Props)=>{
               id: p.person.id,
               introduction
               }
-      const myfetch =fetcher('post', {"Cookies": global.authcookie}, val)
+      const myfetch =fetcher('post', cookieHeader, stringify(val))
       const result = await myfetch('/api/person/update')
-      if(result.status = 200){
+      if(result.ok){
         setError("success")
         setMessage("successful update")
       }

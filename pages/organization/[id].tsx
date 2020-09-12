@@ -36,7 +36,10 @@ const OrgzForm = ({item}: Props)=>{
     }
     console.log("member=",member)
     const handleSubmit=()=>{
-        const val = {creatby: user.id, name, brief, ostatus, website, mailext}
+        var val = {creatby: user.id, name, brief, ostatus, website, mailext, member}
+        if(item){
+          val= Object.assign(val, {id: item.id})
+        }
         console.log(val)
         fetch('/api/org/update', { 
         method: 'POST',

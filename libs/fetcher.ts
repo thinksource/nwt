@@ -27,11 +27,23 @@ import Axios, { Method } from "axios"
 //   }
 // }
 
-export default (method: Method, headers?: Object, body={})=>{
-    headers = Object.assign({'Content-Type': 'application/json'}, headers)
 
-    return async (url:string)=>{
-        const re = await Axios(url, {method, headers,data:body})
-        return re
+export default (method: Method, header?: Headers, body:string="")=>{
+    const headers = new Headers({'Content-Type': 'application/json'})
+    if(header){
+        header.forEach((value, key, _parent)=>{
+            headers.append(key, value)
+        })
+    }
+    // headers = Object.assign({'Content-Type': 'application/json'}, headers)
+    if(body || body.length==0 || method == 'get'){
+        return (url: RequestInfo)=>{
+            return fetch(url, {method, headers})
+        }
+    }else{
+        return (url:RequestInfo)=>{
+            const re = fetch(url, {method, headers, body})
+            return re
+        }
     }
 } 

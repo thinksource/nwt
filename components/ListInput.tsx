@@ -44,7 +44,7 @@ export const ListInput =(props: ArrayProps)=>{
             </button>
           {state.map((key, index)=>(
           <li key={index}>
-            <input name="input" id={index.toString()} type="text" onChange={editState} value={key}/>
+            <input name={props.name} id={index.toString()} type="text" onChange={editState} value={key}/>
           </li>
           ))}
         </ul>

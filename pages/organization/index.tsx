@@ -21,6 +21,7 @@ import FilterListIcon from '@material-ui/icons/FilterList';
 import { NextPageContext } from 'next';
 import axios from 'axios'
 import Link from 'next/link';
+import fetcher from "../../libs/fetcher"
 
 
 // interface Data {
@@ -115,7 +116,7 @@ const headCells: HeadCell[] = [
   { id: 'website', numeric: true, disablePadding: false, label: 'website' },
   { id: 'status', numeric: true, disablePadding: false, label: 'status' },
   { id: 'mailext', numeric: true, disablePadding: false, label: 'e-mail address' },
-  { id: 'member', numeric: true, disablePadding: false, label: 'be member of' },
+  { id: 'member', numeric: true, disablePadding: false, label: 'member of AAAiH' },
 ];
 
 interface EnhancedTableProps {
@@ -404,18 +405,24 @@ EnhancedTable.getInitialProps = async (ctx: NextPageContext) =>{
   
   // console.log(`${baseUrl}/api/org`)
   const cookie= ctx.req?.headers.cookie?ctx.req.headers.cookie:''
-  const result = await axios.get(`${baseUrl}/api/org`, {headers:{'Cookie': cookie}})
-    .catch((e)=>{
-      if(e.response && e.response.status>400){
-        if(ctx.res){
-          ctx.res.writeHead(302, {location: '/login'})
-        }
-      }
-    });
-  if(result.status == 200){
-    console.log("==================")
-    console.log(result.data)
-    return {rows: result.data}
+  const fetchbuild = fetcher('get', new Headers({'Cookie': cookie}))
+  const result = await fetchbuild(`${baseUrl}/api/org`)
+    // .catch((e)=>{
+    //   if(e.response && e.response.status>400){
+    //     if(ctx.res){
+    //       ctx.res.writeHead(302, {location: '/login'})
+    //     }
+    //   }
+    // });
+  if(result){
+    if(result.ok){
+      const rjson = await result.json()
+      console.log("==================")
+      console.log(rjson)
+      return {rows: rjson}
+    }else if(result.status >= 400){
+      ctx.res?.writeHead(301, {Location: '/login'})
+    }
   }
 }
   //   const str_cookie =ctx.req?.headers.cookie
