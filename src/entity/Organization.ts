@@ -44,7 +44,9 @@ export class Organization extends BaseEntity {
     member!: boolean;
 
     toJSON() {
-        return _.omit(this, ['people', 'project', 'technology', 'createby']);
+        const tmp=_.omit(this, ['people', 'project', 'technology', 'createby']);
+        const t= _.pickBy(tmp, v => (v !== undefined && typeof v != 'function'))
+        return t
     }
 
     @BeforeInsert()

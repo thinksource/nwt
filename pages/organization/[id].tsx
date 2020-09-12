@@ -1,13 +1,13 @@
-import { Typography, TextField, NativeSelect, Button, Grid} from "@material-ui/core"
+import { Typography, TextField, NativeSelect, Button, Grid, Switch, InputLabel} from "@material-ui/core"
 import { useState, ChangeEvent } from "react";
-import {ArrayInput, ArrayProps} from "../../components/ArrayInput"
+import {ListInput} from "../../components/ListInput"
 import Alert from '@material-ui/lab/Alert';
 
 import { useUser } from "../../components/UserProvider";
 import { NextPageContext } from "next";
 import { getDatabaseConnection } from "../../libs/db";
 import { Organization } from "../../src/entity/Organization";
-
+import _ from 'lodash';
 interface IOrgz{
     name: string,
     id: string,
@@ -15,12 +15,13 @@ interface IOrgz{
     status: string,
     website: string,
     mailext: string[],
+    member: number
 }
 type Props ={
     item?: IOrgz
 }
 const OrgzForm = ({item}: Props)=>{
-    console.log(item)
+
     const [name, setName] = useState<string>(item?item.name:"");
     const [brief, setBrief] = useState<string>(item?item.brief:"");
     const [ostatus, setOstatus] = useState<string>(item?item.status:"");
@@ -29,9 +30,11 @@ const OrgzForm = ({item}: Props)=>{
     const user= useUser()
     const [mailext, setMailExt] = useState<string[]>(item?item.mailext:[""]);
     const [error, setError] = useState< "info" | "success" | "warning" | "error" >('info');
+    const [member, setMember] = useState<number>(item?item.member:0)
     const handleChangeStatus =(e: ChangeEvent<HTMLSelectElement>)=>{
         setOstatus(e.currentTarget.value)
     }
+    console.log("member=",member)
     const handleSubmit=()=>{
         const val = {creatby: user.id, name, brief, ostatus, website, mailext}
         console.log(val)
@@ -64,6 +67,9 @@ const OrgzForm = ({item}: Props)=>{
       setBrief(e.target.value)
     }
     
+    function memberChange(e:ChangeEvent<HTMLInputElement>){
+      setMember(Number(e.target.checked))
+    }
     return (
         <>
           <Typography variant="h3">Oraganization information</Typography>
@@ -93,8 +99,9 @@ const OrgzForm = ({item}: Props)=>{
            </NativeSelect><br/>
 
            <TextField value={website} label="Oragnization website" variant="outlined" onChange={websiteChange}/><br/>
+           <InputLabel>Be member of AAAiH:</InputLabel><Switch color="primary" name="COVID_19" checked={member?true:false} onChange={memberChange}/><br/>
            <Typography variant="body1" component="p">Mail extension: </Typography>
-           <ArrayInput inputfields={mailext} setInputFields={setMailExt} labeltext="input mail extesion"/>
+           <ListInput value={mailext} onChange={setMailExt} labeltext="input mail extesion" name="mailext"/>
            <Button  variant="contained" color="primary" onClick={handleSubmit}> Submit</Button>
            </Grid>
         </>
@@ -106,8 +113,10 @@ export async function getServerSideProps(cxt: NextPageContext) {
     const db= await getDatabaseConnection()
     const dbrep = db.getRepository<Organization>('organization')
     const result = await dbrep.findOne({where: {id}})
-
+    console.log(result)
     const json = result? result.toJSON():{}
+    console.log(json)
+    _.each(json, v=>console.log(typeof v, v))
     return {
       props: {item: json}, // will be passed to the page component as props
     }

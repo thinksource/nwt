@@ -15,8 +15,7 @@ import Paper from '@material-ui/core/Paper';
 import Checkbox from '@material-ui/core/Checkbox';
 import IconButton from '@material-ui/core/IconButton';
 import Tooltip from '@material-ui/core/Tooltip';
-import FormControlLabel from '@material-ui/core/FormControlLabel';
-import Switch from '@material-ui/core/Switch';
+
 import DeleteIcon from '@material-ui/icons/Delete';
 import FilterListIcon from '@material-ui/icons/FilterList';
 import { NextPageContext } from 'next';
@@ -93,6 +92,7 @@ function getComparator<Key extends keyof any>(
 }
 
 function stableSort<T>(array: T[], comparator: (a: T, b: T) => number) {
+  console.log("array=",array)
   const stabilizedThis = array.map((el, index) => [el, index] as [T, number]);
   stabilizedThis.sort((a, b) => {
     const order = comparator(a[0], b[0]);
@@ -402,15 +402,20 @@ EnhancedTable.getInitialProps = async (ctx: NextPageContext) =>{
   const baseUrl = ctx.req ? `http://${host}` : '';
   // const str_cookie =ctx.req?.headers.cookie
   
-  console.log(`${baseUrl}/api/org`)
+  // console.log(`${baseUrl}/api/org`)
   const cookie= ctx.req?.headers.cookie?ctx.req.headers.cookie:''
   const result = await axios.get(`${baseUrl}/api/org`, {headers:{'Cookie': cookie}})
+    .catch((e)=>{
+      if(e.response && e.response.status>400){
+        if(ctx.res){
+          ctx.res.writeHead(302, {location: '/login'})
+        }
+      }
+    });
   if(result.status == 200){
     console.log("==================")
     console.log(result.data)
     return {rows: result.data}
-  }else{
-    return {rows: []}
   }
 }
   //   const str_cookie =ctx.req?.headers.cookie

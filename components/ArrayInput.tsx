@@ -6,6 +6,7 @@ import { useState, useEffect, ChangeEvent } from "react";
 export interface ArrayProps {
     value: string[],
     labeltext: string,
+
     setValue: Dispatch<SetStateAction<string[]>>
 }
 
@@ -50,7 +51,7 @@ export const ArrayInput =(props: ArrayProps)=>{
         <button type="button" onClick={removefields}>
             remove 
         </button></p>
-        {fields.map((key, index)=>(<li><TextField label={props.labeltext} color="secondary" value={key} key={`k${index}`} onChange={(val: ChangeEvent<HTMLInputElement>)=>{
+        {fields.map((key, index)=>(<li key={`k${index}`} ><TextField label={props.labeltext} color="secondary" value={key} onChange={(val: ChangeEvent<HTMLInputElement>)=>{
             chnageInput(index, val.target.value)
             
         }}/></li>))}

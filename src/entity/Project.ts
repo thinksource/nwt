@@ -1,4 +1,4 @@
-import {Entity, PrimaryGeneratedColumn, Column, ManyToOne, OneToOne, JoinColumn, BaseEntity } from "typeorm";
+import {Entity, PrimaryGeneratedColumn, Column, ManyToOne, JoinColumn, BaseEntity } from "typeorm";
 import { Organization } from "./Organization";
 import { Contact } from "./Contact";
 import { User } from "./User";
@@ -20,7 +20,7 @@ export class Project extends BaseEntity{
     @Column('tinyint')
     COVID_19!: boolean;
 
-    @OneToOne(() => Contact)
+    @ManyToOne(() => Contact)
     @JoinColumn()
     contact!: Contact;
 

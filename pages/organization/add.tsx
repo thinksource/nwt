@@ -1,9 +1,10 @@
-import { Typography, TextField, NativeSelect, Button, Grid} from "@material-ui/core"
+import { Typography, TextField, NativeSelect, Button, Grid, Switch, InputLabel} from "@material-ui/core"
 import { useState, ChangeEvent } from "react";
-import {ArrayInput, ArrayProps} from "../../components/ArrayInput"
-import Alert from '@material-ui/lab/Alert';
 
+import Alert from '@material-ui/lab/Alert';
+import {ListInput} from "../../components/ListInput";
 import { useUser } from "../../components/UserProvider";
+import React from "react";
 
 const OrgzForm = ()=>{
     const [name, setName] = useState<string>();
@@ -14,11 +15,12 @@ const OrgzForm = ()=>{
     const user= useUser()
     const [mailext, setMailExt] = useState<string[]>( [""]);
     const [error, setError] = useState< "info" | "success" | "warning" | "error" >('info');
+    const [member, setMember] = useState<number>(0)
     const handleChangeStatus =(e: ChangeEvent<HTMLSelectElement>)=>{
         setOstatus(e.currentTarget.value)
     }
     const handleSubmit=()=>{
-        const val = {creatby: user.id, name, brief, ostatus, website, mailext}
+        const val = {createby: user.id, name, brief, ostatus, website, mailext}
         console.log(val)
         fetch('/api/org/update', { 
         method: 'POST',
@@ -48,6 +50,9 @@ const OrgzForm = ()=>{
     function briefChange(e:ChangeEvent<HTMLInputElement>){
       setBrief(e.target.value)
     }
+    function memberChange(e:ChangeEvent<HTMLInputElement>){
+      setMember(Number(e.target.checked))
+    }
     
     return (
         <>
@@ -76,10 +81,10 @@ const OrgzForm = ()=>{
               <option value="active">active</option>
               <option value="deleted">deleted</option>
            </NativeSelect><br/>
-
            <TextField value={website} label="Oragnization website" variant="outlined" onChange={websiteChange}/><br/>
+           <InputLabel>Be member of AAAiH:</InputLabel><Switch color="primary" name="COVID_19" checked={member?true:false} onChange={memberChange}/><br/>
            <Typography variant="body1" component="p">Mail extension: </Typography>
-           <ArrayInput inputfields={mailext} setInputFields={setMailExt} labeltext="input mail extesion"/>
+           <ListInput value={mailext} onChange={setMailExt} labeltext="input mail extesion" name="mailext"/>
            <Button  variant="contained" color="primary" onClick={handleSubmit}> Submit</Button>
            </Grid>
         </>

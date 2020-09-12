@@ -187,7 +187,7 @@ export function authByRole(roles: UserRole[]):middleFunction{
           res.status(401).json({message:'Please login again'})
         }
       }else{
-        res.redirect('/')
+        res.status(401).json({message: 'Please login again'})
       }
     }
   }

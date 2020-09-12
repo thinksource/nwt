@@ -15,6 +15,7 @@ import { Contact } from "../../src/entity/Contact"
 import { useUser } from "../../components/UserProvider"
 import { IncomingMessage, ServerResponse } from "http"
 import { Socket } from "net"
+import { ListInput } from "../../components/ListInput"
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -95,7 +96,7 @@ const ProjectForm = (p: Props)=>{
         initialValues: init,
    
         onSubmit: async (values )=> {
-            const t= Object.assign(values, {createby: user.id})
+            const t= Object.assign(values, {createby: user.id}, {expertise: expertis})
             console.log(t)
             const myfetch =fetcher('post', {}, t)
             const result= await myfetch('/api/project/update')
@@ -120,7 +121,7 @@ const ProjectForm = (p: Props)=>{
             fullWidth={true} variant="outlined"/>
             <br />
         <InputLabel>add expertis requirement fields:</InputLabel>
-        <ArrayInput labeltext="the expertis fields" value={formik.values.expertise} setValue={formik.handleChange} />
+        <ListInput labeltext="the expertis fields" name="expertis" value={expertis} onChange={setExpertis} />
             <InputLabel>COVID 19:</InputLabel><Switch onChange={formik.handleChange} color="primary" name="COVID_19" value={formik.values.COVID_19}/> <br />
             <label><strong>Organization:</strong></label><label>{p.org_name}</label> &#9;<label><strong>organization website:</strong></label><label>{p.org_website}</label> <br />
             <label><strong>Member of AAAiH:</strong></label><label>{p.org_member? "Yes": "NO"}</label><br/>
