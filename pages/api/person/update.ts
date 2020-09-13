@@ -3,6 +3,7 @@ import { Person } from '../../../src/entity/Person'
 import { getDatabaseConnection } from '../../../libs/db'
 
 handler.post(async (req, res)=>{
+    console.log(req.body)
     const {id, firstname, lastname, COVID19, belong_org, userId, expertise, title, introduction}= req.body
     const rep = (await getDatabaseConnection()).getRepository<Person>('person')
     var person:Person

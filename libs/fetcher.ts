@@ -28,22 +28,25 @@ import Axios, { Method } from "axios"
 // }
 
 
-export default (method: Method, header?: Headers, body:string="")=>{
-    const headers = new Headers({'Content-Type': 'application/json'})
+const fetcher=(method: Method, header?: Headers, body:string="")=>{
+    const headers = new Headers({'Content-Type': 'application/json'}) 
     if(header){
         header.forEach((value, key, _parent)=>{
             headers.append(key, value)
         })
     }
     // headers = Object.assign({'Content-Type': 'application/json'}, headers)
-    if(body || body.length==0 || method == 'get'){
+    if(!body || body.length==0 || method == 'get'){
         return (url: RequestInfo)=>{
             return fetch(url, {method, headers})
         }
     }else{
         return (url:RequestInfo)=>{
+            console.log(body)
             const re = fetch(url, {method, headers, body})
             return re
         }
     }
 } 
+
+export default fetcher

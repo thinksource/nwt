@@ -120,12 +120,14 @@ const PersonForm = (p : Props)=>{
 
     const handleAddContact= async (values: Contact, formikHelpers: FormikHelpers<Contact>)=>{
       const t= Object.assign(values, {personId: p.person.id})
-      const myfetch =fetcher('post', cookieHeader, stringify(t))
+      console.log(t)
+      const myfetch =fetcher('post', new Headers(), JSON.stringify(t))
       const result= await myfetch('/api/contact/update')
       if(result.status ===200){
         setMessage("Update successful")
         setError("success")
       }
+      handleClose()
     }
 
     const HandleSubmit=async ()=>{
@@ -135,7 +137,8 @@ const PersonForm = (p : Props)=>{
               id: p.person.id,
               introduction
               }
-      const myfetch =fetcher('post', cookieHeader, stringify(val))
+      console.log(JSON.stringify(val))
+      const myfetch =fetcher('post', new Headers(), JSON.stringify(val))
       const result = await myfetch('/api/person/update')
       if(result.ok){
         setError("success")
@@ -235,14 +238,20 @@ const PersonForm = (p : Props)=>{
         <Formik initialValues={ncontact} onSubmit={handleAddContact}>
         {({ values})=>(
           <Form>
-            <InputLabel htmlFor="title-native-helper">Age</InputLabel>
+            <InputLabel htmlFor="title-native-helper">Title</InputLabel>
             <Field name= "title" as={TitleSelect} className={classes.centalign}></Field>
+            <InputLabel htmlFor="title-native-helper">Frist Name:</InputLabel>
             <Field name="first_name" as={TextField} label="Input First Name"></Field>
+            <InputLabel htmlFor="title-native-helper">Last Name:</InputLabel>
             <Field name="last_name" as={TextField} label="Input First Name"></Field>
+            <InputLabel htmlFor="title-native-helper">Job title:</InputLabel>
             <Field name="job_title" as={TextField} label="Input Job title"></Field>
+            <InputLabel htmlFor="title-native-helper">email:</InputLabel>
             <Field name="email" as={TextField} label="Input email"></Field>
+            <InputLabel htmlFor="title-native-helper">state:</InputLabel>
             <Field name="state" as={TextField} label="Input state"></Field>
-            <Field name="country" as={TextField} label="Input country"></Field>
+            <InputLabel htmlFor="title-native-helper">country:</InputLabel>
+            <Field name="country" as={TextField} label="Input country"></Field><br/>
             <button type="submit">Submit</button>
           </Form>
         )}

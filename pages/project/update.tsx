@@ -16,7 +16,7 @@ import { useUser } from "../../components/UserProvider"
 import { IncomingMessage, ServerResponse } from "http"
 import { Socket } from "net"
 import { ListInput } from "../../components/ListInput"
-
+import { v4 as uuidv4 } from 'uuid';
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
     container: {
@@ -45,7 +45,7 @@ class IProject{
     contact: string
     constructor(){
         const today = new Date()
-        this.id = ''
+        this.id = uuidv4()
         this.name=''
         this.brief=''
         this.expertise = [] as string[]
@@ -98,7 +98,7 @@ const ProjectForm = (p: Props)=>{
         onSubmit: async (values )=> {
             const t= Object.assign(values, {createby: user.id}, {expertise: expertis})
             console.log(t)
-            const myfetch =fetcher('post', {}, t)
+            const myfetch =fetcher('post', new Headers(), JSON.stringify(t))
             const result= await myfetch('/api/project/update')
     
             if(result.status ===200){

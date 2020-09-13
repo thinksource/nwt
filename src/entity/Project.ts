@@ -2,6 +2,7 @@ import {Entity, PrimaryGeneratedColumn, Column, ManyToOne, JoinColumn, BaseEntit
 import { Organization } from "./Organization";
 import { Contact } from "./Contact";
 import { User } from "./User";
+import _ from "lodash";
 
 @Entity()
 export class Project extends BaseEntity{
@@ -37,8 +38,10 @@ export class Project extends BaseEntity{
     creatby!: User
 
 
-    // @Column('createby')
-    // createby: User
+    toJSON(){
+        var tmp = _.omit(this, ['person'])
+        return _.pickBy(tmp, v => (v !== undefined && typeof v!== "function"))
+    }
 
     constructor(){
         const today = new Date()

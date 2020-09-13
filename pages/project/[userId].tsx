@@ -7,10 +7,11 @@ import TableContainer from '@material-ui/core/TableContainer';
 import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
 import Paper from '@material-ui/core/Paper';
-import { TablePagination, Typography } from '@material-ui/core';
+import { Container, TablePagination, Typography } from '@material-ui/core';
 import { NextPageContext } from 'next';
 import { getDatabaseConnection } from '../../libs/db';
 import { Project } from '../../src/entity/Project';
+import Link from 'next/link';
 
 const useStyles = makeStyles({
   table: {
@@ -52,7 +53,7 @@ export default function ProjectTable(props:Props) {
 
 
   return (
-      <>
+    <Container maxWidth="sm">
       <Typography variant="h4" component="h4" gutterBottom>
           Project List
     </Typography>
@@ -74,10 +75,14 @@ export default function ProjectTable(props:Props) {
           {rows.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((row) => (
             <TableRow key={row.id}>
               <TableCell component="th" scope="row">
-                {row.name}
+                <Link href={`/project/details?id=${row.id}`}>
+                  <a>
+                  {row.name}
+                  </a>
+                </Link>
               </TableCell>
               <TableCell align="right">{row.creatby}</TableCell>
-              <TableCell align="right">{row.COVID_19}</TableCell>
+              <TableCell align="right">{row.COVID_19?"Yes": "No"}</TableCell>
               <TableCell align="right">{row.expertise?.join(",")}</TableCell>
               <TableCell align="right">{row.start}</TableCell>
               <TableCell align="right">{row.end}</TableCell>
@@ -97,7 +102,7 @@ export default function ProjectTable(props:Props) {
           onChangePage={handleChangePage}
           onChangeRowsPerPage={handleChangeRowsPerPage}
         />
-    </>
+    </Container>
   );
 }
 
@@ -105,6 +110,11 @@ export const getServerSideProps = async (ctx: NextPageContext) => {
     const userId = ctx.query.userId?ctx.query.userId:""
     const db = await getDatabaseConnection()
     const prep = db.getRepository<Project>('project')
-    const result = await prep.createQueryBuilder().where("createby = :userId", {userId}).getMany()
-    return {'props': {'projects' : result}}
+    // const build = prep.createQueryBuilder().innerJoin("user", "User", "User.id = Project.creatby").where("User.id = :userId", {userId})
+    const build = prep.createQueryBuilder().innerJoinAndSelect("user", "User", "User.id = Project.creatby").where("User.id = :userId", {userId}).addSelect('User.email')
+    console.log(build.getSql())
+    const result = await build.getMany()
+    console.log(result)
+    console.log("================finished=")
+    return {'props': {'projects' : result.map(r=>r.toJSON())}}
 }
