@@ -21,11 +21,23 @@ export class Project extends BaseEntity{
     @Column('tinyint')
     COVID_19!: boolean;
 
+    
+    @Column('uuid')         
+    createbyId!: string;
+
+    @Column('uuid')         
+    organizationId?: string;
+
+
+    @Column('uuid')
+    contactId!:string;
+
     @ManyToOne(() => Contact)
-    @JoinColumn()
+    @JoinColumn({name: 'contactId'})
     contact!: Contact;
 
     @ManyToOne(() => Organization, org => org.project, {nullable: true})
+    @JoinColumn({name: 'organizationId'})
     organization?: Organization;
 
     @Column('date')
@@ -35,6 +47,7 @@ export class Project extends BaseEntity{
     end!: Date;
 
     @ManyToOne(() => User, u => u.projects)
+    @JoinColumn({name: 'createbyId'})
     creatby!: User
 
 

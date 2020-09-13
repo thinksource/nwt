@@ -1,4 +1,4 @@
-import {Entity, Column, PrimaryGeneratedColumn, ManyToOne, OneToMany, BeforeInsert, BaseEntity} from "typeorm";
+import {Entity, Column, PrimaryGeneratedColumn, ManyToOne, OneToMany, BeforeInsert, BaseEntity, JoinColumn} from "typeorm";
 import { User } from "./User";
 import { Person } from "./Person";
 import { Project } from "./Project";
@@ -25,6 +25,9 @@ export class Organization extends BaseEntity {
     @Column('varchar')
     website!: string;
 
+    @Column('uuid')
+    createbyId!: string;
+
     @Column('simple-array')
     mailext!: string[];
 
@@ -38,6 +41,7 @@ export class Organization extends BaseEntity {
     technology?: Technology[];
 
     @ManyToOne(()=>User)
+    @JoinColumn({name: 'createbyId'})
     createby!: User;
 
     @Column({type:'tinyint', default: false})

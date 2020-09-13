@@ -405,7 +405,7 @@ EnhancedTable.getInitialProps = async (ctx: NextPageContext) =>{
   
   // console.log(`${baseUrl}/api/org`)
   const cookie= ctx.req?.headers.cookie?ctx.req.headers.cookie:''
-  const fetchbuild = fetcher('get', new Headers({'Cookie': cookie}))
+  const fetchbuild = fetcher('get')
   const result = await fetchbuild(`${baseUrl}/api/org`)
     // .catch((e)=>{
     //   if(e.response && e.response.status>400){

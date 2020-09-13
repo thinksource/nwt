@@ -27,6 +27,9 @@ export class Person extends BaseEntity {
     @Column({type: 'varchar', default: ''})
     first_name!: string;
 
+    @Column('uuid')
+    belongOrganizationId!: string;
+
     @Column('varchar')
     last_name!: string;
 

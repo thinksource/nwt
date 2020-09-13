@@ -121,7 +121,7 @@ const PersonForm = (p : Props)=>{
     const handleAddContact= async (values: Contact, formikHelpers: FormikHelpers<Contact>)=>{
       const t= Object.assign(values, {personId: p.person.id})
       console.log(t)
-      const myfetch =fetcher('post', new Headers(), JSON.stringify(t))
+      const myfetch =fetcher('post', JSON.stringify(t))
       const result= await myfetch('/api/contact/update')
       if(result.status ===200){
         setMessage("Update successful")
@@ -138,7 +138,7 @@ const PersonForm = (p : Props)=>{
               introduction
               }
       console.log(JSON.stringify(val))
-      const myfetch =fetcher('post', new Headers(), JSON.stringify(val))
+      const myfetch =fetcher('post', JSON.stringify(val))
       const result = await myfetch('/api/person/update')
       if(result.ok){
         setError("success")

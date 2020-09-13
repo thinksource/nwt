@@ -21,14 +21,25 @@ export class Technology extends BaseEntity{
     @Column('tinyint')
     COVID_19!: boolean;
 
+    @Column('uuid')         
+    createbyId!: string;
+
+    @Column('uuid')         
+    organizationId?: string;
+
+    @Column('uuid')
+    contactId!:string
+
     @ManyToOne(() => Organization, org => org.technology)
-    organization!: Organization;
+    @JoinColumn({name: 'organizationId'})
+    organization?: Organization;
 
     @ManyToOne(() => User, u => u.technologys)
+    @JoinColumn({name: 'createbyId'})
     creatby!: User
 
     @ManyToOne(() => Contact)
-    @JoinColumn()
+    @JoinColumn({name: 'contactId'})
     contact!: Contact;
 
 }

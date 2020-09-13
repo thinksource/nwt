@@ -59,7 +59,7 @@ export const getServerSideProps = async (ctx: NextPageContext) => {
     // const build = prep.createQueryBuilder().innerJoin("user", "User", "User.id = Project.creatby").where("User.id = :userId", {userId})
     const build = db.createQueryBuilder('project', 'Project')
         .innerJoinAndSelect("user", "User", "User.id = Project.creatby")
-        .innerJoinAndSelect('organization', 'Organization', "Project.organization=Organization.id").where("Projec.id = :id", {id})
+        .innerJoinAndSelect('organization', 'Organization', "Project.organization=Organization.id").where("Project.id = :id", {id})
     console.log(build.getSql())
     const result = await build.getRawOne()
     console.log(result)

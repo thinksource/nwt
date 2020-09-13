@@ -1,6 +1,6 @@
 import React, {useState, FormEvent} from 'react';
 import Router from 'next/router';
-
+import fetcher from '../libs/fetcher'
 
 const Signup = () => {
   const [signupError, setSignupError] = useState('');
@@ -11,13 +11,8 @@ const Signup = () => {
   function handleSubmit(e: FormEvent) {
     e.preventDefault();
     const json = JSON.stringify({email,password,passwordConfirmation});
-    fetch('/api/user/signup', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({email,password,passwordConfirmation}),
-    })
+    const myfetcher = fetcher('post', json)
+    myfetcher('/api/user/signup')
       .then((r) => r.json())
       .then((data) => {
         if (data && data.error) {

@@ -9,7 +9,6 @@
 //     });
 //     const content = await rawResponse.json();
 
-import Axios, { Method } from "axios"
 
   
 //     console.log(content);
@@ -28,7 +27,7 @@ import Axios, { Method } from "axios"
 // }
 
 
-const fetcher=(method: Method, header?: Headers, body:string="")=>{
+const fetcher=(method: string,  body:string="", header: Headers=new Headers())=>{
     const headers = new Headers({'Content-Type': 'application/json'}) 
     if(header){
         header.forEach((value, key, _parent)=>{

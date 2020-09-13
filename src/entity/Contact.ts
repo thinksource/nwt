@@ -1,4 +1,4 @@
-import {Entity, Column, ManyToOne, PrimaryGeneratedColumn, BaseEntity} from "typeorm";
+import {Entity, Column, ManyToOne, PrimaryGeneratedColumn, BaseEntity, JoinColumn} from "typeorm";
 import { Person} from "./Person";
 import _ from 'lodash';
 import { PersonTitle } from "./util";
@@ -15,6 +15,9 @@ export class Contact extends BaseEntity {
         default: PersonTitle.Blank
         })
     title?: string;
+
+    @Column('uuid')
+    personId!:string;
 
     @Column({type: 'varchar', default: ''})
     first_name!: string;
@@ -35,6 +38,7 @@ export class Contact extends BaseEntity {
     state!: string;
 
     @ManyToOne(() => Person, p => p.contact)
+    @JoinColumn({ name: 'personId' })
     person!: Person;
 
     toJSON(){

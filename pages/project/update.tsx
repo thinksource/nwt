@@ -17,6 +17,7 @@ import { IncomingMessage, ServerResponse } from "http"
 import { Socket } from "net"
 import { ListInput } from "../../components/ListInput"
 import { v4 as uuidv4 } from 'uuid';
+import { Alert } from "@material-ui/lab"
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
     container: {
@@ -96,9 +97,9 @@ const ProjectForm = (p: Props)=>{
         initialValues: init,
    
         onSubmit: async (values )=> {
-            const t= Object.assign(values, {createby: user.id}, {expertise: expertis})
+            const t= Object.assign(values, {createbyId: user.id}, {expertise: expertis})
             console.log(t)
-            const myfetch =fetcher('post', new Headers(), JSON.stringify(t))
+            const myfetch =fetcher('post',JSON.stringify(t))
             const result= await myfetch('/api/project/update')
     
             if(result.status ===200){
@@ -113,6 +114,7 @@ const ProjectForm = (p: Props)=>{
     return (
         <>
         <Typography variant="h3">Project information</Typography>
+        {message?<Alert severity={error}>{message}</Alert>:<br />}
         <form onSubmit={(e)=>{e.preventDefault(); formik.handleSubmit()}}>
         <InputLabel>Project Name:</InputLabel>
         <TextField name="name" label="project name" value={formik.values.name} onChange={formik.handleChange}></TextField><br/>
