@@ -12,6 +12,7 @@ import { NextPageContext } from 'next';
 import { getDatabaseConnection } from '../../libs/db';
 import { Project } from '../../src/entity/Project';
 import Link from 'next/link';
+import { deleteUndefined } from '../../libs/utils';
 
 const useStyles = makeStyles({
   table: {
@@ -111,10 +112,10 @@ export const getServerSideProps = async (ctx: NextPageContext) => {
     const db = await getDatabaseConnection()
     const prep = db.getRepository<Project>('project')
     // const build = prep.createQueryBuilder().innerJoin("user", "User", "User.id = Project.creatby").where("User.id = :userId", {userId})
-    const build = prep.createQueryBuilder().innerJoinAndSelect("user", "User", "User.id = Project.creatby").where("User.id = :userId", {userId}).addSelect('User.email')
+    const build = db.createQueryBuilder().select('project').from(Project, 'project').innerJoinAndSelect("user", "User", "User.id = Project.creatbyId").where("User.id = :userId", {userId}).addSelect('User.email')
     console.log(build.getSql())
     const result = await build.getMany()
     console.log(result)
     console.log("================finished=")
-    return {'props': {'projects' : result.map(r=>r.toJSON())}}
+    return {'props': {'projects' : result.map(r=>deleteUndefined(r))}}
 }

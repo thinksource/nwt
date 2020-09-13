@@ -36,7 +36,7 @@ const OrgzForm = ({item}: Props)=>{
     }
     console.log("member=",member)
     const handleSubmit=()=>{
-        var val = {creatby: user.id, name, brief, ostatus, website, mailext, member}
+        var val = {creatbyId: user.id, name, brief, ostatus, website, mailext, member}
         if(item){
           val= Object.assign(val, {id: item.id})
         }

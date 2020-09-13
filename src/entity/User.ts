@@ -3,6 +3,7 @@ import crypto from 'crypto';
 import _ from 'lodash';
 import { Project } from "./Project";
 import { Technology } from "./Technology";
+import { Contact } from "./Contact";
 // export type UserState = "active" | "deactive"
 export enum UserRole {
     admin = "admin",
@@ -42,6 +43,9 @@ export class User extends BaseEntity{
 
     @OneToMany(()=>Technology, p=>p.creatby)
     technologys?: Technology
+
+    @OneToMany(()=>Contact, c=>c.creatby)
+    contact?:Contact
 
     errors?: string[];
 

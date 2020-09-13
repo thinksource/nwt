@@ -14,7 +14,7 @@ import {global} from '../../libs/global'
 import Axios from 'axios';
 import { Contact } from '../../src/entity/Contact';
 import { TitleSelect } from '../../components/TitleSelect';
-import {stringify} from 'flatted';
+import { useUser } from '../../components/UserProvider';
 // interface Props {
 //     email: string
 // }
@@ -42,7 +42,8 @@ export interface PeopleProps {
 }
 interface Props {
   organzations: Array<OrganizationProps>
-  person: Person
+  person: Person,
+  userId: string
 }
 
 interface IContact{
@@ -70,16 +71,19 @@ const PersonForm = (p : Props)=>{
     const [error, setError] = useState< "info" | "success" | "warning" | "error" >('info');
     const [open, setOpen] = React.useState(false);
     const [rows, setRows] = React.useState([] as IContact[]);
+    const user = useUser()
     var ncontact = new Contact()
     const handleChange = (event: React.ChangeEvent<{ value: unknown }>) => {
         setTitle(event.target.value as string);
       };
 
     useEffect(()=>{
-      console.log(`/api/contact/${p.person.id}`)
-      Axios.get(`/api/contact/${p.person.id}`).then(res=>{
-        if(res.status===200){
-            setRows(res.data)
+      console.log(`/api/contact/${p.userId}`)
+      const myfetch = fetcher('get')
+      myfetch(`/api/contact/${p.userId}`).then(async res=>{
+        if(res.ok){
+            const result = (await res.json()) as IContact[]
+            setRows(await result)
             console.log("++++get data++++")
             console.log(rows)
         }
@@ -119,7 +123,7 @@ const PersonForm = (p : Props)=>{
     }
 
     const handleAddContact= async (values: Contact, formikHelpers: FormikHelpers<Contact>)=>{
-      const t= Object.assign(values, {personId: p.person.id})
+      const t= Object.assign(values, {creatbyId: user.id})
       console.log(t)
       const myfetch =fetcher('post', JSON.stringify(t))
       const result= await myfetch('/api/contact/update')
@@ -326,7 +330,7 @@ export const getServerSideProps = async (ctx: NextPageContext) => {
         resultorg.push(ri.toSimpleJSON())
     }
     
-    return {'props': {'organzations' : resultorg, "person": person.toJSON({user: userId})}}
+    return {'props': {'organzations' : resultorg, "person": person.toJSON({user: userId}), "userId": userId}}
   };
 export default PersonForm
 

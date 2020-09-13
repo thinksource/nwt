@@ -1,7 +1,7 @@
 import {Entity, Column, ManyToOne, PrimaryGeneratedColumn, BaseEntity, JoinColumn} from "typeorm";
-import { Person} from "./Person";
 import _ from 'lodash';
 import { PersonTitle } from "./util";
+import { User } from "./User";
 
 
 @Entity()
@@ -17,7 +17,7 @@ export class Contact extends BaseEntity {
     title?: string;
 
     @Column('uuid')
-    personId!:string;
+    creatbyId!:string;
 
     @Column({type: 'varchar', default: ''})
     first_name!: string;
@@ -37,9 +37,9 @@ export class Contact extends BaseEntity {
     @Column('varchar')
     state!: string;
 
-    @ManyToOne(() => Person, p => p.contact)
-    @JoinColumn({ name: 'personId' })
-    person!: Person;
+    @ManyToOne(() => User, u => u.contact)
+    @JoinColumn({ name: 'creatbyId' })
+    creatby!: User;
 
     toJSON(){
         var tmp = _.omit(this, ['person'])

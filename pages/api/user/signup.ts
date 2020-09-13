@@ -24,7 +24,7 @@ import handler from '../../../libs/handler'
         console.log(passwordConfirmation)
         if (await validate(user, passwordConfirmation)){
             console.log("saving now")
-            // user.generateSalt()
+            user.generatePasswordDigest()
             console.log(user)
             const result=await db.save(user)
             res.status(200).json(result)

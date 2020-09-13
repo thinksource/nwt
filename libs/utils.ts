@@ -1,5 +1,5 @@
 
-
+import _ from "lodash"
 
 export function extractHostname(url:string) {
     console.log(url)
@@ -25,4 +25,8 @@ export function extractHostname(url:string) {
     // hostname = hostname.split('?')[0];
     console.log(hostname)
     return {protocol, hostname, port};
+}
+
+export function deleteUndefined(o: Object){
+    return _.pickBy(o, v => (v !== undefined && typeof v != 'function'))
 }

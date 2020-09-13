@@ -9,7 +9,7 @@ import handler from '../../../libs/handler'
 handler
 // .use(authByRole([UserRole.admin]))
 .post(async (req, res)=>{
-    const {id, name, brief, website, ostatus, createby, mailext, member}= req.body
+    const {id, name, brief, website, ostatus, createbyId, mailext, member}= req.body
     const rep = (await getDatabaseConnection()).getRepository<Organization>('organization')
     // const dbrep = db.getRepository<Organization>('organization')
     if(!id){
@@ -18,7 +18,7 @@ handler
         org.name = name
         org.status = ostatus
         org.website = website
-        org.createby = createby
+        org.createbyId = createbyId
         org.mailext = mailext
         org.member = member?member:false
         const result = await rep.save(org)
@@ -30,7 +30,7 @@ handler
             result.name = name
             result.status = ostatus
             result.website = website
-            result.createby = createby
+            result.createbyId = createbyId
             result.mailext = mailext
             result.member = member?member:result.member
             const ret = await rep.save(result)

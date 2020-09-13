@@ -5,10 +5,10 @@ import _ from 'lodash';
 
 handler.get(async (req, res)=>{
     try{
-    const query =req.query as {personid: string}
+    const query =req.query as {userId: string}
     const rep = (await getDatabaseConnection()).getRepository<Contact>('contact')
     // const build = rep.createQueryBuilder().innerJoin("person", "person").where("person.id= :personId", {personId: personId})
-    const build = rep.createQueryBuilder('contact').where('personId = :Id', {'Id': query.personid})
+    const build = rep.createQueryBuilder('contact').where('creatbyId = :Id', {'Id': query.userId})
 
     // const result = await rep.createQueryBuilder().relation('person').of(personid).select()
     // const result = await rep.createQueryBuilder().relation('people').of(personid)

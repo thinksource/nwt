@@ -1,6 +1,5 @@
-import {Entity, PrimaryGeneratedColumn, Column, OneToOne, JoinColumn, ManyToOne, OneToMany, BaseEntity} from "typeorm";
+import {Entity, PrimaryGeneratedColumn, Column, OneToOne, JoinColumn, ManyToOne, BaseEntity} from "typeorm";
 import { User } from "./User";
-import {Contact} from "./Contact";
 import { Organization } from "./Organization";
 import _ from 'lodash';
 import { v4 as uuidv4 } from 'uuid';
@@ -48,8 +47,6 @@ export class Person extends BaseEntity {
     @Column({type: "boolean", default: false})
     COVID_19!: boolean;
 
-    @OneToMany(() => Contact, contact => contact.person)
-    contact?: Contact[];
 
     toJSON(inject: Object) {
         var tmp = _.omit(this, ['contact']);
@@ -64,7 +61,6 @@ export class Person extends BaseEntity {
         this.COVID_19 = false
         const user = new User()
         user.id=userstr
-        this.contact = []
         this.first_name = ""
         this.last_name = ""
         this.title = ""
