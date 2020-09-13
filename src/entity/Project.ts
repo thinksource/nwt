@@ -48,7 +48,7 @@ export class Project extends BaseEntity{
 
     @ManyToOne(() => User, u => u.projects)
     @JoinColumn({name: 'createbyId'})
-    creatby!: User
+    createby!: User
 
 
     toJSON(){

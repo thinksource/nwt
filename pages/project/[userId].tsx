@@ -63,7 +63,7 @@ export default function ProjectTable(props:Props) {
         <TableHead>
           <TableRow>
             <TableCell>Project Name</TableCell>
-            <TableCell align="right">creatby</TableCell>
+            <TableCell align="right">create by</TableCell>
             
             <TableCell align="right">COVID 19</TableCell>
             <TableCell align="right">expertise require</TableCell>
@@ -82,7 +82,7 @@ export default function ProjectTable(props:Props) {
                   </a>
                 </Link>
               </TableCell>
-              <TableCell align="right">{row.creatby}</TableCell>
+              <TableCell align="right">{row.createby}</TableCell>
               <TableCell align="right">{row.COVID_19?"Yes": "No"}</TableCell>
               <TableCell align="right">{row.expertise?.join(",")}</TableCell>
               <TableCell align="right">{row.start}</TableCell>
@@ -111,8 +111,8 @@ export const getServerSideProps = async (ctx: NextPageContext) => {
     const userId = ctx.query.userId?ctx.query.userId:""
     const db = await getDatabaseConnection()
     const prep = db.getRepository<Project>('project')
-    // const build = prep.createQueryBuilder().innerJoin("user", "User", "User.id = Project.creatby").where("User.id = :userId", {userId})
-    const build = db.createQueryBuilder().select('project').from(Project, 'project').innerJoinAndSelect("user", "User", "User.id = Project.creatbyId").where("User.id = :userId", {userId}).addSelect('User.email')
+    const build = prep.createQueryBuilder().innerJoin("user", "User", "User.id = Project.createbyId").where("User.id = :userId", {userId})
+    // const build = db.createQueryBuilder().select('project').from(Project, 'project').innerJoinAndSelect("user", "User", "User.id = Project.createbyId").where("User.id = :userId", {userId}).addSelect('User.email')
     console.log(build.getSql())
     const result = await build.getMany()
     console.log(result)

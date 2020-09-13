@@ -8,15 +8,15 @@ handler.post(async (req, res)=>{
     const db = await getDatabaseConnection()
     const rep = db.getRepository<Contact>('contact');
     // const {job_title, email, country, state, person} = req.body
-    const {personId} = req.body
-    console.log(personId)
-    const prep = db.getRepository<Person>('person');
-    const person = await prep.findOne({where: {id: personId}})
+    // const {personId} = req.body
+    
+    // const prep = db.getRepository<Person>('person');
+    // const person = await prep.findOne({where: {id: personId}})
     
     const contact = rep.create(req.body as Contact) 
-    if(person){
-        contact.person = person
-    }
+    // if(person){
+    //     contact.creatbyId = person
+    // }
     console.log(contact)
     const result = await rep.save(contact)
     res.status(200).json(result)

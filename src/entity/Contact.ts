@@ -17,7 +17,7 @@ export class Contact extends BaseEntity {
     title?: string;
 
     @Column('uuid')
-    creatbyId!:string;
+    createbyId!:string;
 
     @Column({type: 'varchar', default: ''})
     first_name!: string;
@@ -38,8 +38,8 @@ export class Contact extends BaseEntity {
     state!: string;
 
     @ManyToOne(() => User, u => u.contact)
-    @JoinColumn({ name: 'creatbyId' })
-    creatby!: User;
+    @JoinColumn({ name: 'createbyId' })
+    createby!: User;
 
     toJSON(){
         var tmp = _.omit(this, ['person'])

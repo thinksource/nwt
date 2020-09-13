@@ -37,14 +37,14 @@ export class User extends BaseEntity{
     @Column('varchar')
     salt!: string;
 
-    @OneToMany(()=>Project, p=>p.creatby)
+    @OneToMany(()=>Project, p=>p.createby)
     projects?: Project
 
 
-    @OneToMany(()=>Technology, p=>p.creatby)
+    @OneToMany(()=>Technology, p=>p.createby)
     technologys?: Technology
 
-    @OneToMany(()=>Contact, c=>c.creatby)
+    @OneToMany(()=>Contact, c=>c.createby)
     contact?:Contact
 
     errors?: string[];

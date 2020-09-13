@@ -36,7 +36,7 @@ export class Technology extends BaseEntity{
 
     @ManyToOne(() => User, u => u.technologys)
     @JoinColumn({name: 'createbyId'})
-    creatby!: User
+    createby!: User
 
     @ManyToOne(() => Contact)
     @JoinColumn({name: 'contactId'})

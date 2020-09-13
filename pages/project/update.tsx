@@ -1,6 +1,5 @@
-import { Typography, TextField, Switch, FormControlLabel, NativeSelect, InputLabel, Input, Theme, makeStyles, createStyles} from "@material-ui/core"
+import { Typography, TextField, Switch, FormControlLabel, NativeSelect, InputLabel, Theme, makeStyles, createStyles} from "@material-ui/core"
 import {  useFormik } from "formik"
-import {global} from "../../libs/global"
 import { Project } from "../../src/entity/Project"
 import fetcher from "../../libs/fetcher"
 import React, { ChangeEvent, useState } from "react"
@@ -12,7 +11,6 @@ import { getDatabaseConnection } from "../../libs/db"
 import { Organization } from "../../src/entity/Organization"
 import { loadGetInitialProps } from "next/dist/next-server/lib/utils"
 import { Contact } from "../../src/entity/Contact"
-import { useUser } from "../../components/UserProvider"
 import { IncomingMessage, ServerResponse } from "http"
 import { Socket } from "net"
 import { ListInput } from "../../components/ListInput"
@@ -38,12 +36,12 @@ class IProject{
     name : string
     brief : string
     expertise : string[]
-    organization: string
+    organizationId: string
     COVID_19: boolean
     start: string
     end: string
-    createby: string
-    contact: string
+    contactId: string
+    createbyId:string
     constructor(){
         const today = new Date()
         this.id = uuidv4()
@@ -51,11 +49,11 @@ class IProject{
         this.brief=''
         this.expertise = [] as string[]
         this.COVID_19=false
-        this.organization = ''
+        this.organizationId = ''
         this.start = today.toJSON().substr(0, 10)
         this.end = today.toJSON().substr(0, 10)
-        this.createby = ""
-        this.contact = ""       
+        this.contactId = ""
+        this.createbyId=""       
     }
 }
 
@@ -85,8 +83,7 @@ const ProjectForm = (p: Props)=>{
     const [error, setError] = useState< "info" | "success" | "warning" | "error" >('info');
     const [COVID19, setCOVID19] = useState(p.project.COVID_19)
     const [expertis, setExpertis] = useState(p.project.expertise)
-    const [contact, setContact] = useState(p.project.contact)
-    const user = useUser()
+    const [contactId, setContactId] = useState(p.project.contactId)
     const classes = useStyles();
 
     const handleChange =(e:ChangeEvent<HTMLInputElement>)=>{
@@ -97,7 +94,7 @@ const ProjectForm = (p: Props)=>{
         initialValues: init,
    
         onSubmit: async (values )=> {
-            const t= Object.assign(values, {createbyId: user.id}, {expertise: expertis})
+            const t= Object.assign(values, {expertise: expertis})
             console.log(t)
             const myfetch =fetcher('post',JSON.stringify(t))
             const result= await myfetch('/api/project/update')
@@ -156,7 +153,7 @@ const ProjectForm = (p: Props)=>{
             /><br />
             <InputLabel></InputLabel>
             <Typography variant="h6">Contact select:</Typography>
-            <NativeSelect name ="contact" value={formik.values.contact} onChange={formik.handleChange}>
+            <NativeSelect name ="contactId" value={formik.values.contactId} onChange={formik.handleChange}>
                 <option value=""></option>
                 {contactlist.map((row, _index, _rows)=>{
                     return (<option value={row.id} key= {row.id}>{`${row.first_name} ${row.last_name} ${row.email}`}</option>)
@@ -179,16 +176,16 @@ export const getServerSideProps = async (ctx: NextPageContext) => {
     const token = decodeAuthCookie(cookiestr)
     const db = await getDatabaseConnection()
     const orep = db.getRepository<Organization>('organization')
-    const build = orep.createQueryBuilder().innerJoin('person', 'Person', 'Person.belong_organization = Organization.id')
+    const build = orep.createQueryBuilder().innerJoin('person', 'Person', 'Person.belongOrganizationId = Organization.id')
         .where("Person.userId = :id", {id: token.UserId})
     const oresult = await build.getOne()
     const crep = db.getRepository<Contact>('contact')
-    const cbuild = crep.createQueryBuilder().innerJoin('person', 'Person', 'Person.id=Contact.personId')
-        .where("Person.userId = :id", {id: token.UserId})
+    const cbuild = crep.createQueryBuilder().where("createbyId = :id", {id: token.UserId})
     const cresult = await cbuild.getMany()
+    
     const re = new IProject()
-    re.organization = oresult?oresult.id:''
-    re.createby = token.UserId
+    re.organizationId = oresult?oresult.id:''
+    re.createbyId = token.UserId
     console.log(re)
     return {
         "props":{
