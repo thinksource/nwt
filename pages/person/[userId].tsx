@@ -123,7 +123,7 @@ const PersonForm = (p : Props)=>{
     }
 
     const handleAddContact= async (values: Contact, formikHelpers: FormikHelpers<Contact>)=>{
-      const t= Object.assign(values, {creatbyId: user.id})
+      const t= Object.assign(values, {createbyId: user.id})
       console.log(t)
       const myfetch =fetcher('post', JSON.stringify(t))
       const result= await myfetch('/api/contact/update')

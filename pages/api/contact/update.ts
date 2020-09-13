@@ -1,7 +1,6 @@
 import handler from '../../../libs/handler'
 import { getDatabaseConnection } from '../../../libs/db'
 import { Contact } from '../../../src/entity/Contact'
-import { Person } from '../../../src/entity/Person'
 
 handler.post(async (req, res)=>{
     try{
