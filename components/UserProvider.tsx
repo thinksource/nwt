@@ -11,10 +11,9 @@ type Props = {
     children?: ReactNode
 }
 export const UserProvider = ({cookie, children }: Props)=>{
-    console.log(cookie)
     let defaultUser = decodeAuthCookie(cookie?cookie:'')
     UserStateContext= createContext<User>(defaultUser)
-    console.log(defaultUser)
+    // console.log(defaultUser)
 
     return (
         <UserStateContext.Provider value={defaultUser}>

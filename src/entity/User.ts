@@ -4,6 +4,7 @@ import _ from 'lodash';
 import { Project } from "./Project";
 import { Technology } from "./Technology";
 import { Contact } from "./Contact";
+import { flaten } from "../../libs/utils";
 // export type UserState = "active" | "deactive"
 export enum UserRole {
     admin = "admin",
@@ -68,7 +69,8 @@ export class User extends BaseEntity{
 
 
     toJSON() {
-        return _.omit(this, ['password', 'errors', 'salt']);
+        const tmp = _.omit(this, ['password', 'errors', 'salt']);
+        return flaten(tmp)
     }
 
 }

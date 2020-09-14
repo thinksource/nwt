@@ -24,7 +24,7 @@ export async function validate(user: User, pw: string){
 }
 
 export const decodeAuthCookie = (cookiestr: string)=>{
-    console.log(cookiestr)
+    // console.log(cookiestr)
     if(cookiestr.length==0)return new User()
     const mycookie = parse(cookiestr)
     if(mycookie.auth){
