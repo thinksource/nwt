@@ -11,7 +11,7 @@ export default function Index() {
     <Container maxWidth="sm">
       <Box my={4}>
         <Typography variant="h4" component="h1" gutterBottom>
-          Next.js with TypeScript example
+          The AAAiH project manager
         </Typography>
         <Link href="/about" color="secondary">
           Go to the about page

@@ -2,7 +2,8 @@ import {Entity, Column, PrimaryGeneratedColumn, ManyToOne, JoinColumn, BaseEntit
 import { Organization } from "./Organization";
 import { Contact } from "./Contact";
 import { User } from "./User";
-
+import { flaten } from "../../libs/utils";
+import { v4 as uuidv4 } from 'uuid';
 @Entity()
 export class Technology extends BaseEntity{
     
@@ -42,4 +43,18 @@ export class Technology extends BaseEntity{
     @JoinColumn({name: 'contactId'})
     contact!: Contact;
 
+    toJSON(){
+        return flaten(this)
+    }
+    constructor(userid: string){
+        super();
+        this.id = uuidv4()
+        this.brief=""
+        this.name=""
+        this.link=""
+        this.COVID_19=false
+        this.contactId = userid
+        this.organizationId =""
+        this.contactId =""
+    }
 }

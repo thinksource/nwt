@@ -5,6 +5,7 @@ import Grid from '@material-ui/core/Grid';
 import { getDatabaseConnection } from '../../libs/db';
 import { NextPageContext } from 'next';
 import _ from "lodash";
+import { Project } from '../../src/entity/Project';
 
 interface Props{
 
@@ -54,14 +55,16 @@ export default function CenteredGrid(props:any) {
   );
 }
 export const getServerSideProps = async (ctx: NextPageContext) => {
-    const id = ctx.query.userId?ctx.query.id:""
+    const id = ctx.query.projectId?ctx.query.projectId:""
     const db = await getDatabaseConnection()
+    const prep = db.getRepository<Project>('project')
     // const build = prep.createQueryBuilder().innerJoin("user", "User", "User.id = Project.creatby").where("User.id = :userId", {userId})
-    const build = db.createQueryBuilder('project', 'Project')
-        .innerJoinAndSelect("user", "User", "User.id = Project.createbyId")
-        .innerJoinAndSelect('organization', 'Organization', "Project.organization=Organization.id").where("Project.id = :id", {id})
-    console.log(build.getSql())
-    const result = await build.getRawOne()
+    // const build = db.createQueryBuilder('project', 'Project')
+    //     .innerJoinAndSelect("user", "User", "User.id = Project.createbyId")
+    //     .innerJoinAndSelect('organization', 'Organization', "Project.organization=Organization.id").where("Project.id = :id", {id})
+    
+    // console.log(build.getSql())
+    const result = await prep.findOne({where: {id}})
     console.log(result)
     console.log("================finished=")
     return {'props': {'project' : _.pickBy(result, v => (v !== undefined && typeof v!== "function"))}}

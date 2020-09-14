@@ -84,6 +84,7 @@ const ProjectButton = ()=>{
   const handleClose = () => {
     setAnchorEl(null);
   };
+  if(user.role === 'active' || user.role === 'admin'){
   return (
     <>
     <Button aria-controls="simple-menu" aria-haspopup="true" onClick={handleClick}>
@@ -97,7 +98,7 @@ const ProjectButton = ()=>{
         onClose={handleClose}>
 
         <MenuItem onClick={handleClose}>
-          <Link href={`/project/${user.id}`}>
+          <Link href='/project/manage'>
             <a>Manage Projects</a>
           </Link>
         </MenuItem>
@@ -110,6 +111,50 @@ const ProjectButton = ()=>{
       </Menu>
     </>
   )
+  }else{
+    return (<></>)
+  }
+}
+
+const TechnologyButton = ()=>{
+  const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
+  const user = useUser()
+  const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
+    setAnchorEl(event.currentTarget);
+  };
+  const handleClose = () => {
+    setAnchorEl(null);
+  };
+  if(user.role === 'active' || user.role === 'admin'){
+  return (
+    <>
+    <Button aria-controls="simple-menu" aria-haspopup="true" onClick={handleClick}>
+        Technology
+      </Button>
+      <Menu
+        id="menutechnology"
+        anchorEl={anchorEl}
+        keepMounted
+        open={Boolean(anchorEl)}
+        onClose={handleClose}>
+
+        <MenuItem onClick={handleClose}>
+          <Link href='/technology/manage'>
+            <a>Manage Technology</a>
+          </Link>
+        </MenuItem>
+        <MenuItem onClick={handleClose}> 
+          <Link href={`/technology/update`}>
+            <a>Register Technology</a>
+          </Link>
+        </MenuItem>
+        
+      </Menu>
+    </>
+  )
+  }else{
+    return (<></>)
+  }
 }
 
 const OrgButton =(props: NavProps)=>{
@@ -148,7 +193,7 @@ const OrgButton =(props: NavProps)=>{
   }else if(props.userId){
     return (
       <Button>
-        <Link href="/organization/register">
+        <Link href="/organization/add">
           <a style={{ color: 'white' }}>
             regist a organization
           </a>
@@ -194,21 +239,7 @@ export const Nav = ()=> {
 
 
       <ProjectButton></ProjectButton>
-      <Button aria-controls="simple-menu" aria-haspopup="true" onClick={handleClick}>
-        Technology
-      </Button>
-      <Menu
-        id="menutechnology"
-        anchorEl={anchorEl}
-        keepMounted
-        open={Boolean(anchorEl)}
-        onClose={handleClose}>
-        <MenuItem onClick={handleClose}>
-          <Link href={`/technoloy/${user.id}`}>
-            <a>Manage technology</a>
-          </Link>
-          </MenuItem>
-      </Menu>
+      <TechnologyButton></TechnologyButton>
       <OrgButton userId={user.id} userRole={user.role} email={user.email}></OrgButton>
       <ProfileButton userId={user.id} userRole={user.role} email={user.email}></ProfileButton>
       </Toolbar>

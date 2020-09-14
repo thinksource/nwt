@@ -12,7 +12,8 @@ import { NextPageContext } from 'next';
 import { getDatabaseConnection } from '../../libs/db';
 import { Project } from '../../src/entity/Project';
 import Link from 'next/link';
-import { deleteUndefined } from '../../libs/utils';
+import {  flaten } from '../../libs/utils';
+import { decodeAuthCookie } from '../../libs/user';
 
 const useStyles = makeStyles({
   table: {
@@ -69,25 +70,23 @@ export default function ProjectTable(props:Props) {
             <TableCell align="right">expertise require</TableCell>
             <TableCell align="right">start</TableCell>
             <TableCell align="right">end</TableCell>
-            <TableCell align="right">action</TableCell>
           </TableRow>
         </TableHead>
         <TableBody>
           {rows.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((row) => (
             <TableRow key={row.id}>
               <TableCell component="th" scope="row">
-                <Link href={`/project/details?id=${row.id}`}>
+                <Link href={`/project/update?projectId=${row.id}`}>
                   <a>
                   {row.name}
                   </a>
                 </Link>
               </TableCell>
-              <TableCell align="right">{row.createby}</TableCell>
+              <TableCell align="right">{row.createby.email}</TableCell>
               <TableCell align="right">{row.COVID_19?"Yes": "No"}</TableCell>
               <TableCell align="right">{row.expertise?.join(",")}</TableCell>
               <TableCell align="right">{row.start}</TableCell>
-              <TableCell align="right">{row.end}</TableCell>
-              <TableCell align="right"><button>delete</button></TableCell>
+              <TableCell align="right">{row.end}</TableCell>      
             </TableRow>
           ))}
         </TableBody>
@@ -108,14 +107,23 @@ export default function ProjectTable(props:Props) {
 }
 
 export const getServerSideProps = async (ctx: NextPageContext) => {
-    const userId = ctx.query.userId?ctx.query.userId:""
-    const db = await getDatabaseConnection()
-    const prep = db.getRepository<Project>('project')
-    const build = prep.createQueryBuilder().innerJoin("user", "User", "User.id = Project.createbyId").where("User.id = :userId", {userId})
-    // const build = db.createQueryBuilder().select('project').from(Project, 'project').innerJoinAndSelect("user", "User", "User.id = Project.createbyId").where("User.id = :userId", {userId}).addSelect('User.email')
-    console.log(build.getSql())
-    const result = await build.getMany()
-    console.log(result)
-    console.log("================finished=")
-    return {'props': {'projects' : result.map(r=>deleteUndefined(r))}}
+    const cookiestr = ctx.req?ctx.req.headers.cookie:""
+    if(cookiestr){
+
+      
+      const user = decodeAuthCookie(cookiestr)
+      const db = await getDatabaseConnection()
+      const prep = db.getRepository<Project>('project')
+      const result = await prep.find({where: {'createbyId': user.id}, relations: ["createby"]})
+      // const build = prep.createQueryBuilder().innerJoin("user", "User", "User.id = Project.createbyId").where("User.id = :userId", {userId})
+      // const build = db.createQueryBuilder().select('project').from(Project, 'project').innerJoinAndSelect("user", "User", "User.id = Project.createbyId").where("User.id = :userId", {userId}).addSelect('User.email')
+      // console.log(build.getSql())
+      // const result = await build.getMany()
+      console.log(result)
+      console.log("================finished=")
+      for(let r of result){
+        console.log(r.toJSON())
+      }
+      return {'props': {'projects' : result.map(r=>r.toJSON())}}
+    }
 }

@@ -3,6 +3,7 @@ import { Organization } from "./Organization";
 import { Contact } from "./Contact";
 import { User } from "./User";
 import _ from "lodash";
+import { flaten } from "../../libs/utils";
 
 @Entity()
 export class Project extends BaseEntity{
@@ -53,7 +54,7 @@ export class Project extends BaseEntity{
 
     toJSON(){
         var tmp = _.omit(this, ['person'])
-        return _.pickBy(tmp, v => (v !== undefined && typeof v!== "function"))
+        return flaten(tmp)
     }
 
     constructor(){

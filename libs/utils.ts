@@ -27,6 +27,36 @@ export function extractHostname(url:string) {
     return {protocol, hostname, port};
 }
 
-export function deleteUndefined(o: Object){
-    return _.pickBy(o, v => (v !== undefined && typeof v != 'function'))
+
+
+export function flaten(data: Object){
+    var result =_.pickBy(data, v => (v !== undefined && typeof v != 'function'))
+    _.map(result, data=>{
+            if(typeof data =='object'){
+                return flaten(data)
+            }
+        })
+    return JSON.parse(JSON.stringify(result));
 }
+
+// export const dateStripped = (obj:Object) => {
+// 	let newObj = {}
+// 	Object.keys(obj).forEach((key:string) => {
+// 		let value = obj[key as keyof typeof obj]
+// 		if (value !== null || value !== undefined || typeof value !== 'function' ) {
+// 			// If array, loop...
+// 			if (Array.isArray(value)) {
+// 				value = value.map(item => dateStripped(item))
+// 			}
+// 			// ...if property is date/time, stringify/parse...
+// 			else if (typeof value === 'object') {
+// 				value = JSON.parse(JSON.stringify(_.pickBy(value, v => (v !== undefined && typeof v != 'function')))
+// 			}
+// 			// ...and if a deep object, loop.
+// 			else{
+// 				value = dateStripped(value)
+// 			}
+// 		}
+// 	})
+// 	return newObj
+// }

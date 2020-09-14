@@ -9,7 +9,6 @@ import { NextApiResponse, NextPageContext } from "next"
 import { decodeAuthCookie } from "../../libs/auth"
 import { getDatabaseConnection } from "../../libs/db"
 import { Organization } from "../../src/entity/Organization"
-import { loadGetInitialProps } from "next/dist/next-server/lib/utils"
 import { Contact } from "../../src/entity/Contact"
 import { IncomingMessage, ServerResponse } from "http"
 import { Socket } from "net"
@@ -18,6 +17,7 @@ import { v4 as uuidv4 } from 'uuid';
 import { Alert } from "@material-ui/lab"
 import  { useRouter } from 'next/router';
 import { useUser } from "../../components/UserProvider"
+import { Technology } from "../../src/entity/Technology"
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
     container: {
@@ -37,23 +37,18 @@ class IProject{
     id: string
     name : string
     brief : string
-    expertise : string[]
+    link: string
     organizationId: string
     COVID_19: boolean
-    start: string
-    end: string
     contactId: string
     createbyId:string
     constructor(){
-        const today = new Date()
         this.id = uuidv4()
         this.name=''
         this.brief=''
-        this.expertise = [] as string[]
+        this.link=''
         this.COVID_19=false
         this.organizationId = ''
-        this.start = today.toJSON().substr(0, 10)
-        this.end = today.toJSON().substr(0, 10)
         this.contactId = ""
         this.createbyId=""       
     }
@@ -70,7 +65,7 @@ interface IContact{
     state: string
   }
 interface Props{
-    project: IProject,
+    technology: IProject,
     org_name: string,
     org_website: string,
     org_member: boolean,
@@ -79,21 +74,21 @@ interface Props{
 
 const ProjectForm = (p: Props)=>{
 
-    var init=p.project
+    var init=p.technology
+    console.log(init)
     const router = useRouter()
     const contactlist = p.contacts
     const [message, setMessage] = useState<string>("");
     const [error, setError] = useState< "info" | "success" | "warning" | "error" >('info');
-    const [COVID19, setCOVID19] = useState(p.project.COVID_19)
-    const [expertis, setExpertis] = useState(p.project.expertise)
-    const [contactId, setContactId] = useState(p.project.contactId)
+    const [COVID19, setCOVID19] = useState(p.technology.COVID_19)
+    const [contactId, setContactId] = useState(p.technology.contactId)
     const classes = useStyles();
     const user = useUser();
 
     const handleDeleteProject = async ()=>{
-        const t ={projectId: p.project.id}
+        const t ={id: p.technology.id, createbyId: user.id}
         const myfetch = fetcher('delete', JSON.stringify(t))
-        const result = await myfetch('../api/project/delete')
+        const result = await myfetch('../api/technology/delete')
         if(result.status === 200){
             setMessage("Already Delete project")
             setError("success")
@@ -109,10 +104,10 @@ const ProjectForm = (p: Props)=>{
         initialValues: init,
    
         onSubmit: async (values )=> {
-            const t= Object.assign(values, {expertise: expertis})
+            const t= Object.assign(values)
             console.log(t)
             const myfetch =fetcher('post',JSON.stringify(t))
-            const result= await myfetch('/api/project/update')
+            const result= await myfetch('/api/technology/update')
     
             if(result.status ===200){
               setMessage("Update successful")
@@ -125,47 +120,21 @@ const ProjectForm = (p: Props)=>{
     console.log(formik.values)
     return (
         <>
-        <Typography variant="h3">Project information</Typography>
+        <Typography variant="h3">Technology information</Typography>
         {message?<Alert severity={error}>{message}</Alert>:<br />}
         <form onSubmit={(e)=>{e.preventDefault(); formik.handleSubmit()}}>
-        <InputLabel>Project Name:</InputLabel>
-        <TextField name="name" label="project name" value={formik.values.name} onChange={formik.handleChange}></TextField><br/>
+        <InputLabel>Technology Name:</InputLabel>
+        <TextField name="name" label="technology name" value={formik.values.name} onChange={formik.handleChange}></TextField><br/>
         <InputLabel>Brief Introduction:</InputLabel><br/>
         <TextField name="brief" value={formik.values.brief} label="introduction project" onChange={formik.handleChange} multiline rows={4}
             fullWidth={true} variant="outlined"/>
             <br />
-        <InputLabel>add expertis requirement fields:</InputLabel>
-        <ListInput labeltext="the expertis fields" name="expertis" value={expertis} onChange={setExpertis} />
+            <InputLabel>Technology demo or detail link:</InputLabel>
+            <TextField name="link" label="website link" value={formik.values.link} onChange={formik.handleChange}></TextField>
             <InputLabel>COVID 19:</InputLabel><Switch onChange={formik.handleChange} color="primary" name="COVID_19" value={formik.values.COVID_19}/> <br />
             <label><strong>Organization:</strong></label><label>{p.org_name}</label> &#9;<label><strong>organization website:</strong></label><label>{p.org_website}</label> <br />
             <label><strong>Member of AAAiH:</strong></label><label>{p.org_member? "Yes": "NO"}</label><br/>
-            <Typography variant="h6">Project Period:</Typography>
-            <InputLabel>Start from:</InputLabel>
-            <TextField
-                id="statedate"
-                name="start"
-                label="start date"
-                type="date"
-                value={formik.values.start}
-                className={classes.textField}
-                onChange ={formik.handleChange}
-                InputLabelProps={{
-                shrink: true,
-                }}
-            /><br />
-            <InputLabel>End by:</InputLabel>
-            <TextField
-                id="enddate"
-                name="end"
-                label="end date"
-                type="date"
-                value={formik.values.end}
-                onChange ={formik.handleChange}
-                className={classes.textField}
-                InputLabelProps={{
-                shrink: true,
-                }}
-            /><br />
+
             <InputLabel></InputLabel>
             <Typography variant="h6">Contact select:</Typography>
             <NativeSelect name ="contactId" value={formik.values.contactId} onChange={formik.handleChange}>
@@ -189,10 +158,9 @@ export const getServerSideProps = async (ctx: NextPageContext) => {
     const inc = new IncomingMessage(new Socket())
     const res = ctx.res?ctx.res: new ServerResponse(ctx.req?ctx.req:inc)
     try{
-    console.log("========project update=============")
+    console.log("=========update technology================")
     console.log(cookiestr)
     const token = decodeAuthCookie(cookiestr)
-    console.log(token)
     const db = await getDatabaseConnection()
     const orep = db.getRepository<Organization>('organization')
     const build = orep.createQueryBuilder().innerJoin('person', 'Person', 'Person.belongOrganizationId = Organization.id')
@@ -201,20 +169,20 @@ export const getServerSideProps = async (ctx: NextPageContext) => {
     const crep = db.getRepository<Contact>('contact')
     const cbuild = crep.createQueryBuilder().where("createbyId = :id", {id: token.UserId})
     const cresult = await cbuild.getMany()
-    const projectId = ctx.query?ctx.query.projectId:''
-    var re: Project| IProject
-    if(projectId){
-        const t = await db.getRepository<Project>('project').findOne({where: {id: projectId}})
-        re =t?t: new IProject()
+    const technologyId = ctx.query?ctx.query.technologyId:''
+    var re: Technology
+    if(technologyId){
+        const t = await db.getRepository<Technology>('technology').findOne({where: {id: technologyId}})
+        re =t?t: new Technology(token.UserId)
     }else{
-        re = new IProject()
+        re = new Technology(token.UserId)
     }
     re.organizationId = oresult?oresult.id:''
     re.createbyId = token.UserId
     console.log(re)
     return {
         "props":{
-            "project": JSON.parse(JSON.stringify(re)),
+            "technology": JSON.parse(JSON.stringify(re)),
             "org_name": oresult?oresult.name:"",
             "org_website": oresult?oresult.website:"",
             "org_member": oresult? oresult.member: false,
