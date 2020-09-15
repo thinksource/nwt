@@ -1,36 +1,34 @@
-import { Typography, TextField, Switch, FormControlLabel, NativeSelect, InputLabel, Theme, makeStyles, createStyles} from "@material-ui/core"
+import { Typography, TextField, Switch, NativeSelect, InputLabel, } from "@material-ui/core"
 import {  useFormik } from "formik"
-import { Project } from "../../src/entity/Project"
+// import {Theme, makeStyles, createStyles} from "@material-ui/core"
 import fetcher from "../../libs/fetcher"
-import React, { ChangeEvent, useState } from "react"
-import { ArrayInput } from "../../components/ArrayInput"
-import { CompareArrowsOutlined, Router, SentimentSatisfied } from "@material-ui/icons"
-import { NextApiResponse, NextPageContext } from "next"
+import React, { useState } from "react"
+
 import { decodeAuthCookie } from "../../libs/auth"
 import { getDatabaseConnection } from "../../libs/db"
 import { Organization } from "../../src/entity/Organization"
 import { Contact } from "../../src/entity/Contact"
 import { IncomingMessage, ServerResponse } from "http"
 import { Socket } from "net"
-import { ListInput } from "../../components/ListInput"
 import { v4 as uuidv4 } from 'uuid';
 import { Alert } from "@material-ui/lab"
 import  { useRouter } from 'next/router';
 import { useUser } from "../../components/UserProvider"
 import { Technology } from "../../src/entity/Technology"
-const useStyles = makeStyles((theme: Theme) =>
-  createStyles({
-    container: {
-      display: 'flex',
-      flexWrap: 'wrap',
-    },
-    textField: {
-      marginLeft: theme.spacing(1),
-      marginRight: theme.spacing(1),
-      width: 200,
-    },
-  }),
-);
+import { NextPageContext } from "next"
+// const useStyles = makeStyles((theme: Theme) =>
+//   createStyles({
+//     container: {
+//       display: 'flex',
+//       flexWrap: 'wrap',
+//     },
+//     textField: {
+//       marginLeft: theme.spacing(1),
+//       marginRight: theme.spacing(1),
+//       width: 200,
+//     },
+//   }),
+// );
 
 
 class IProject{
@@ -80,9 +78,7 @@ const ProjectForm = (p: Props)=>{
     const contactlist = p.contacts
     const [message, setMessage] = useState<string>("");
     const [error, setError] = useState< "info" | "success" | "warning" | "error" >('info');
-    const [COVID19, setCOVID19] = useState(p.technology.COVID_19)
-    const [contactId, setContactId] = useState(p.technology.contactId)
-    const classes = useStyles();
+    // const classes = useStyles();
     const user = useUser();
 
     const handleDeleteProject = async ()=>{

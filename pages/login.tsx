@@ -4,7 +4,6 @@ import { Formik, Form, Field} from 'formik'
 // import { mutate} from 'swr';
 
 // import Axios, { Method } from 'axios';
-import { useRouter } from 'next/router';
 import { useUser } from '../components/UserProvider';
 interface Props {
     previousPath: string
@@ -14,7 +13,7 @@ const LoginForm: React.FC<Props> = (loginData: Props)=>{
     // const passRef = useRef<HTMLInputElement>(null);
     const [message, setMessage] = useState<any>(null);
     let user= useUser()
-    const router = useRouter()
+
 
     return (
         <>
@@ -41,7 +40,7 @@ const LoginForm: React.FC<Props> = (loginData: Props)=>{
                     user.email = myjson.email
                     user.id = myjson.id
                     user.role = myjson.role
-                    window.location.replace('/')            
+                    window.location.replace(p)            
                 }
             }}
             initialValues={{ email: '', password:'' }}

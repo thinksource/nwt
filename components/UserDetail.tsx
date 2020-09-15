@@ -1,7 +1,7 @@
 import * as React from 'react'
 
 import { User } from '../src/entity/User'
-import { Typography, InputLabel, NativeSelect, FormHelperText, Portal,TextField, TextFieldProps, responsiveFontSizes } from '@material-ui/core'
+import { Typography, InputLabel, NativeSelect, FormHelperText, Portal,TextField, TextFieldProps} from '@material-ui/core'
 import { Formik, Form } from 'formik'
 import { NextPageContext } from 'next'
 import { useState, useRef } from 'react'
@@ -40,7 +40,7 @@ const UserDetail = (props: ListDetailProps) => {
         else if(!UserId){setMessage("Do not login as user, please login again")}
         else{
         const data = { oldpass, newpass, id: UserId}
-        const myresp = fetch('http://localhost:3000/api/user/resetpass', {
+        fetch('http://localhost:3000/api/user/resetpass', {
             method: 'POST',
             headers: {
               'Content-Type': 'application/json',

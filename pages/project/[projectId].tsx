@@ -7,9 +7,6 @@ import { NextPageContext } from 'next';
 import _ from "lodash";
 import { Project } from '../../src/entity/Project';
 
-interface Props{
-
-}
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
     root: {

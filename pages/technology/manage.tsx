@@ -10,9 +10,8 @@ import Paper from '@material-ui/core/Paper';
 import { Container, TablePagination, Typography } from '@material-ui/core';
 import { NextPageContext } from 'next';
 import { getDatabaseConnection } from '../../libs/db';
-import { Project } from '../../src/entity/Project';
+
 import Link from 'next/link';
-import {  flaten } from '../../libs/utils';
 import { decodeAuthCookie } from '../../libs/user';
 import { Technology } from '../../src/entity/Technology';
 
@@ -22,18 +21,6 @@ const useStyles = makeStyles({
   },
 });
 
-function createData(name: string, calories: number, fat: number, carbs: number, protein: number) {
-  return { name, calories, fat, carbs, protein };
-}
-
-// const rows = [
-//   createData('Frozen yoghurt', 159, 6.0, 24, 4.0),
-//   createData('Ice cream sandwich', 237, 9.0, 37, 4.3),
-//   createData('Eclair', 262, 16.0, 24, 6.0),
-//   createData('Cupcake', 305, 3.7, 67, 4.3),
-//   createData('Gingerbread', 356, 16.0, 49, 3.9),
-//   createData('text', 690, 16.0, 49, 3.9)
-// ];
 
 interface Props{
   technology: Technology[]
@@ -45,7 +32,7 @@ export default function ProjectTable(props:Props) {
   const [rowsPerPage, setRowsPerPage] = React.useState(5);
   const [page, setPage] = React.useState(0);
 
-  const handleChangePage = (event: unknown, newPage: number) => {
+  const handleChangePage = (_event: unknown, newPage: number) => {
     setPage(newPage);
   };
 

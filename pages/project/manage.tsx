@@ -12,7 +12,6 @@ import { NextPageContext } from 'next';
 import { getDatabaseConnection } from '../../libs/db';
 import { Project } from '../../src/entity/Project';
 import Link from 'next/link';
-import {  flaten } from '../../libs/utils';
 import { decodeAuthCookie } from '../../libs/user';
 
 const useStyles = makeStyles({
@@ -21,9 +20,9 @@ const useStyles = makeStyles({
   },
 });
 
-function createData(name: string, calories: number, fat: number, carbs: number, protein: number) {
-  return { name, calories, fat, carbs, protein };
-}
+// function createData(name: string, calories: number, fat: number, carbs: number, protein: number) {
+//   return { name, calories, fat, carbs, protein };
+// }
 
 // const rows = [
 //   createData('Frozen yoghurt', 159, 6.0, 24, 4.0),
@@ -44,7 +43,7 @@ export default function ProjectTable(props:Props) {
   const [rowsPerPage, setRowsPerPage] = React.useState(5);
   const [page, setPage] = React.useState(0);
 
-  const handleChangePage = (event: unknown, newPage: number) => {
+  const handleChangePage = (_event: unknown, newPage: number) => {
     setPage(newPage);
   };
 

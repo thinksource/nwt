@@ -19,7 +19,6 @@ import Tooltip from '@material-ui/core/Tooltip';
 import DeleteIcon from '@material-ui/icons/Delete';
 import FilterListIcon from '@material-ui/icons/FilterList';
 import { NextPageContext } from 'next';
-import axios from 'axios'
 import Link from 'next/link';
 import fetcher from "../../libs/fetcher"
 
@@ -273,7 +272,7 @@ export default function EnhancedTable(props: Props) {
   const [page, setPage] = React.useState(0);
   const [rowsPerPage, setRowsPerPage] = React.useState(5);
 
-  const handleRequestSort = (event: React.MouseEvent<unknown>, property: keyof Row) => {
+  const handleRequestSort = (_event: React.MouseEvent<unknown>, property: keyof Row) => {
     const isAsc = orderBy === property && order === 'asc';
     setOrder(isAsc ? 'desc' : 'asc');
     setOrderBy(property);
@@ -288,7 +287,7 @@ export default function EnhancedTable(props: Props) {
     setSelected([]);
   };
 
-  const handleClick = (event: React.MouseEvent<unknown>, name: string) => {
+  const handleClick = (_event: React.MouseEvent<unknown>, name: string) => {
     const selectedIndex = selected.indexOf(name);
     let newSelected: string[] = [];
 
@@ -308,7 +307,7 @@ export default function EnhancedTable(props: Props) {
     setSelected(newSelected);
   };
 
-  const handleChangePage = (event: unknown, newPage: number) => {
+  const handleChangePage = (_event: unknown, newPage: number) => {
     setPage(newPage);
   };
 
@@ -398,13 +397,12 @@ export default function EnhancedTable(props: Props) {
 }
 
 EnhancedTable.getInitialProps = async (ctx: NextPageContext) =>{
-  let rows:any
   const host:string = (ctx.req && ctx.req.headers['host'])?ctx.req.headers['host']:''
   const baseUrl = ctx.req ? `http://${host}` : '';
   // const str_cookie =ctx.req?.headers.cookie
   
   // console.log(`${baseUrl}/api/org`)
-  const cookie= ctx.req?.headers.cookie?ctx.req.headers.cookie:''
+  // const cookie= ctx.req?.headers.cookie?ctx.req.headers.cookie:''
   const fetchbuild = fetcher('get')
   const result = await fetchbuild(`${baseUrl}/api/org`)
     // .catch((e)=>{

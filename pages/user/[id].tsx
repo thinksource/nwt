@@ -1,4 +1,4 @@
-import { GetStaticProps, GetStaticPaths, NextPageContext } from 'next'
+import { NextPageContext } from 'next'
 
 import { User} from '../../src/entity/User'
 import Layout from '../../components/Layout'

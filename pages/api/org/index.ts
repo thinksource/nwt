@@ -6,7 +6,7 @@ import { Organization } from '../../../src/entity/Organization';
 import {Not} from "typeorm";
 handler
 .use(authByRole([UserRole.admin]))
-.get(async (req, res)=>{
+.get(async (_req, res)=>{
     const db = (await getDatabaseConnection()).getRepository<Organization>('organization')
     const result = await db.find({where: {status: Not('deleted')}})
     res.status(200).json(result)

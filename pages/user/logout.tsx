@@ -1,8 +1,6 @@
-import { NextPageContext, GetServerSideProps } from "next"
+import {  GetServerSideProps } from "next"
 import cookie from 'cookie';
-import nextConnect from 'next-connect';
-import { NextApiRequest, NextApiResponse } from 'next';
-import { removeAuthCookie } from "../../libs/auth";
+
 const logout = ()=>{
    return (<div/>)
 }

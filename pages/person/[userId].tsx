@@ -1,23 +1,19 @@
 import React, { useState, ChangeEvent, useEffect } from 'react';
-import { Typography, Grid, Select, MenuItem, TextField, FormControlLabel, Switch, NativeSelect, makeStyles, Theme, createStyles, Paper, Button, TableContainer, Table, TableHead, TableRow, TableCell, TableBody, Dialog, DialogTitle, DialogContent, InputLabel } from '@material-ui/core';
+import { Typography, Grid,  TextField, FormControlLabel, Switch, NativeSelect, makeStyles, Theme, createStyles, Paper, Button, TableContainer, Table, TableHead, TableRow, TableCell, TableBody, Dialog, DialogTitle, DialogContent, InputLabel } from '@material-ui/core';
 import { Formik, Form, Field, FormikHelpers} from 'formik'
-import { NextPageContext, GetServerSideProps, GetServerSidePropsResult } from 'next';
+import { NextPageContext} from 'next';
 import { getDatabaseConnection } from '../../libs/db';
 import Alert from '@material-ui/lab/Alert';
 import Autocomplete, { AutocompleteChangeReason } from '@material-ui/lab/Autocomplete';
 import _ from 'lodash';
-import { ArrayInput } from '../../components/ArrayInput';
 import { Person } from '../../src/entity/Person';
 import { Organization } from '../../src/entity/Organization';
 import fetcher from '../../libs/fetcher'
-import {global} from '../../libs/global'
-import Axios from 'axios';
 import { Contact } from '../../src/entity/Contact';
 import { TitleSelect } from '../../components/TitleSelect';
 import { useUser } from '../../components/UserProvider';
-// interface Props {
-//     email: string
-// }
+import { ListInput } from '../../components/ListInput';
+
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
     root: {
@@ -56,7 +52,7 @@ interface IContact{
   state: string
 }
 
-const cookieHeader = new Headers({"Cookies": global.authcookie})
+
 const PersonForm = (p : Props)=>{
 
     const classes = useStyles();
@@ -73,9 +69,6 @@ const PersonForm = (p : Props)=>{
     const [rows, setRows] = React.useState([] as IContact[]);
     const user = useUser()
     var ncontact = new Contact()
-    const handleChange = (event: React.ChangeEvent<{ value: unknown }>) => {
-        setTitle(event.target.value as string);
-      };
 
     useEffect(()=>{
       console.log(`/api/contact/${p.userId}`)
@@ -122,7 +115,7 @@ const PersonForm = (p : Props)=>{
       setOpen(true)
     }
 
-    const handleAddContact= async (values: Contact, formikHelpers: FormikHelpers<Contact>)=>{
+    const handleAddContact= async (values: Contact, _formikHelpers: FormikHelpers<Contact>)=>{
       const t= Object.assign(values, {createbyId: user.id})
       console.log(t)
       const myfetch =fetcher('post', JSON.stringify(t))
@@ -192,7 +185,7 @@ const PersonForm = (p : Props)=>{
                     <FormControlLabel
                     label="Clinical expertise"
                     control={
-                      <ArrayInput value={clinical_exp} setValue={setClinicalExp} labeltext="keywords of experience"></ArrayInput>
+                      <ListInput value={clinical_exp} name="exps" onChange={setClinicalExp} labeltext="keywords of experience"></ListInput>
                     }
                     
                     />
@@ -240,7 +233,7 @@ const PersonForm = (p : Props)=>{
         <DialogTitle >Input Address details</DialogTitle>
         <DialogContent>
         <Formik initialValues={ncontact} onSubmit={handleAddContact}>
-        {({ values})=>(
+        {()=>(
           <Form>
             <InputLabel htmlFor="title-native-helper">Title</InputLabel>
             <Field name= "title" as={TitleSelect} className={classes.centalign}></Field>

@@ -1,7 +1,7 @@
-import { NextApiRequest, NextApiResponse } from 'next'
-import { authenticated, decodeAuthCookie, authById } from '../../../libs/auth'
-import { UserRole, User, pwhash } from '../../../src/entity/User'
-import nextConnect from 'next-connect';
+
+import {  authById } from '../../../libs/auth'
+import {User, pwhash } from '../../../src/entity/User'
+
 import { getDatabaseConnection } from '../../../libs/db';
 // import { sampleUserData } from '../utils/sample-data'
 let userId:string="";
@@ -13,7 +13,7 @@ handler.use((req, _res)=>{
     userId = id
 }).use(authById(userId)).post(async (req, res)=>{
     console.log(req.body)
-    let message:string;
+    // let message:string;
     const db = await getDatabaseConnection()
     const dbmag = db.manager;
     // decodeAuthCookie(req.headers.cookie?req.headers.cookie:'')

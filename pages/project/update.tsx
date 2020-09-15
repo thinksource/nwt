@@ -1,23 +1,22 @@
-import { Typography, TextField, Switch, FormControlLabel, NativeSelect, InputLabel, Theme, makeStyles, createStyles} from "@material-ui/core"
+import { Typography, TextField, Switch,  NativeSelect, InputLabel, Theme, makeStyles, createStyles} from "@material-ui/core"
 import {  useFormik } from "formik"
 import { Project } from "../../src/entity/Project"
 import fetcher from "../../libs/fetcher"
-import React, { ChangeEvent, useState } from "react"
-import { ArrayInput } from "../../components/ArrayInput"
-import { CompareArrowsOutlined, Router, SentimentSatisfied } from "@material-ui/icons"
-import { NextApiResponse, NextPageContext } from "next"
+import React, { useState } from "react"
+
+import { NextPageContext } from "next"
 import { decodeAuthCookie } from "../../libs/auth"
 import { getDatabaseConnection } from "../../libs/db"
 import { Organization } from "../../src/entity/Organization"
-import { loadGetInitialProps } from "next/dist/next-server/lib/utils"
-import { Contact } from "../../src/entity/Contact"
+
+
 import { IncomingMessage, ServerResponse } from "http"
 import { Socket } from "net"
 import { ListInput } from "../../components/ListInput"
 import { v4 as uuidv4 } from 'uuid';
 import { Alert } from "@material-ui/lab"
 import  { useRouter } from 'next/router';
-import { useUser } from "../../components/UserProvider"
+import { Contact } from "../../src/entity/Contact"
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
     container: {
@@ -84,11 +83,8 @@ const ProjectForm = (p: Props)=>{
     const contactlist = p.contacts
     const [message, setMessage] = useState<string>("");
     const [error, setError] = useState< "info" | "success" | "warning" | "error" >('info');
-    const [COVID19, setCOVID19] = useState(p.project.COVID_19)
     const [expertis, setExpertis] = useState(p.project.expertise)
-    const [contactId, setContactId] = useState(p.project.contactId)
     const classes = useStyles();
-    const user = useUser();
 
     const handleDeleteProject = async ()=>{
         const t ={projectId: p.project.id}

@@ -1,7 +1,6 @@
-import {NextApiRequest, NextApiResponse} from 'next';
+
 import {getDatabaseConnection} from '../../../libs/db';
 import {User, UserRole} from '../../../src/entity/User';
-import nextConnect from 'next-connect';
 
 import { validate } from '../../../libs/user';
 

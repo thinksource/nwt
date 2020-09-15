@@ -1,9 +1,6 @@
-import nextConnect from "next-connect";
-import { NextApiRequest, NextApiResponse } from "next";
 import { getDatabaseConnection } from "../../../libs/db";
 import { Organization } from "../../../src/entity/Organization";
-import { authByRole } from "../../../libs/auth";
-import { UserRole } from "../../../src/entity/User";
+
 import handler from '../../../libs/handler'
 
 handler

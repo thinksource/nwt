@@ -2,7 +2,6 @@ import { AppBar, Button, makeStyles, Toolbar, Typography, Menu, MenuItem} from '
 // import Link from 'next/link';
 import Link from 'next/link'
 import React from 'react';
-import ProjectForm from '../pages/project/update';
 
 import { useUser } from './UserProvider';
 // import { GUID, decodeAuthCookie } from '../libs/auth';
@@ -56,7 +55,7 @@ const ProfileButton =(props: NavProps)=>{
       </Link>
       </MenuItem>
       <MenuItem onClick={handleClose}>      
-      <Link href ="/api/user/logout">
+      <Link href ="/logout">
             <a>Logout</a>
       </Link></MenuItem>
       </Menu>
@@ -206,18 +205,11 @@ const OrgButton =(props: NavProps)=>{
 }
 export const Nav = ()=> {
   const classes = useStyles();
-  const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
   const user= useUser()
   console.log(user)
 //   const stateChange: React.ChangeEventHandler<HTMLInputElement> = (event) => {
 //     console.log(event.target.value);
 // };
-  const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
-    setAnchorEl(event.currentTarget);
-  };
-  const handleClose = () => {
-    setAnchorEl(null);
-  };
   console.log(user.toJSON())
   console.log(classes)
   return (
