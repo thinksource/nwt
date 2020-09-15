@@ -4,7 +4,7 @@ import { User } from '../src/entity/User'
 // import { NextPageContext } from 'next'
 import { decodeAuthCookie } from '../libs/user'
 // const defaultUser: User = new User()
-import { global} from '../libs/global'
+
 
 var UserStateContext:React.Context<User>
 type Props = {
@@ -12,9 +12,9 @@ type Props = {
     children?: ReactNode
 }
 export const UserProvider = ({cookie, children }: Props)=>{
-    if(cookie){
-        global.authcookie=cookie
-    }
+    // if(cookie){
+    //     global.authcookie=cookie
+    // }
     let defaultUser = decodeAuthCookie(cookie?cookie:'')
     UserStateContext= createContext<User>(defaultUser)
     // console.log(defaultUser)
