@@ -6,7 +6,7 @@ import cookie, { parse } from 'cookie';
 
 import  { NextHandler } from "next-connect";
 import { IncomingMessage } from "http";
-import {global} from './global'
+
 
 const TOKEN_NAME = 'auth'
 export const GUID ='274a5db6-334f-41b8-a87c-2609bc69e94e'
@@ -30,8 +30,7 @@ export function removeAuthCookie(res: NextApiResponse) {
       httpOnly: true,
       path: '/',
     })
-    global.authcookie=auth_cookie
-  
+
     res.setHeader('Set-Cookie', auth_cookie)
   }
 
