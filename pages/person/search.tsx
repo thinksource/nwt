@@ -12,8 +12,7 @@ import { NextPageContext } from 'next';
 import { getDatabaseConnection } from '../../libs/db';
 
 import Link from 'next/link';
-import { decodeAuthCookie } from '../../libs/user';
-import { Technology } from '../../src/entity/Technology';
+
 import { Person } from '../../src/entity/Person';
 import { flaten } from '../../libs/utils';
 
