@@ -13,11 +13,11 @@ export const GUID ='274a5db6-334f-41b8-a87c-2609bc69e94e'
 type middleFunction = (req: NextApiRequest, res:NextApiResponse, next: NextHandler)=>void
 
 export function setAuthCookie(res: NextApiResponse, token: Object){
-    const jwt = sign(token, GUID, {expiresIn: '2h'})
+    const jwt = sign(token, GUID, {expiresIn: '1h'})
     const auth_cookie = cookie.serialize(TOKEN_NAME, jwt, {
         httpOnly: true,
         sameSite: 'strict',
-        maxAge: 3600,
+        maxAge: 3600, // 1 hour
         path: '/'
     })
     res.setHeader('Set-Cookie', auth_cookie)
@@ -35,12 +35,12 @@ export function removeAuthCookie(res: NextApiResponse) {
   }
 
 
-export const decodeAuthCookie = ( cookiestr: string)=>{
-    const mycookie = cookie.parse(cookiestr)
-    const decode = verify(mycookie.auth, GUID) as {id: string, role: UserRole, email: string}
-    const {id, role, email} = decode
-    return {UserId: id, UserRole: role, 'email': email}
-}
+// export const decodeAuthCookie = ( cookiestr: string)=>{
+//     const mycookie = cookie.parse(cookiestr)
+//     const decode = verify(mycookie.auth, GUID) as {id: string, role: UserRole, email: string}
+//     const {id, role, email} = decode
+//     return {UserId: id, UserRole: role, 'email': email}
+// }
 
 export const roleverify=(cookieStr: string, roles: UserRole[])=>{
     try{

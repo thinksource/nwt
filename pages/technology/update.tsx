@@ -4,7 +4,7 @@ import {  useFormik } from "formik"
 import fetcher from "../../libs/fetcher"
 import React, { useState } from "react"
 
-import { decodeAuthCookie } from "../../libs/auth"
+import { decodeAuthCookie } from "../../libs/user"
 import { getDatabaseConnection } from "../../libs/db"
 import { Organization } from "../../src/entity/Organization"
 import { Contact } from "../../src/entity/Contact"
@@ -156,25 +156,25 @@ export const getServerSideProps = async (ctx: NextPageContext) => {
     try{
     console.log("=========update technology================")
     console.log(cookiestr)
-    const token = decodeAuthCookie(cookiestr)
+    const user = decodeAuthCookie(cookiestr)
     const db = await getDatabaseConnection()
     const orep = db.getRepository<Organization>('organization')
     const build = orep.createQueryBuilder().innerJoin('person', 'Person', 'Person.belongOrganizationId = Organization.id')
-        .where("Person.userId = :id", {id: token.UserId})
+        .where("Person.userId = :id", {id: user.id})
     const oresult = await build.getOne()
     const crep = db.getRepository<Contact>('contact')
-    const cbuild = crep.createQueryBuilder().where("createbyId = :id", {id: token.UserId})
+    const cbuild = crep.createQueryBuilder().where("createbyId = :id", {id: user.id})
     const cresult = await cbuild.getMany()
     const technologyId = ctx.query?ctx.query.technologyId:''
     var re: Technology
     if(technologyId){
         const t = await db.getRepository<Technology>('technology').findOne({where: {id: technologyId}})
-        re =t?t: new Technology(token.UserId)
+        re =t?t: new Technology(user.id)
     }else{
-        re = new Technology(token.UserId)
+        re = new Technology(user.id)
     }
     re.organizationId = oresult?oresult.id:''
-    re.createbyId = token.UserId
+    re.createbyId = user.id
     console.log(re)
     return {
         "props":{

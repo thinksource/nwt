@@ -5,7 +5,7 @@ import fetcher from "../../libs/fetcher"
 import React, { useState } from "react"
 
 import { NextPageContext } from "next"
-import { decodeAuthCookie } from "../../libs/auth"
+// import { decodeAuthCookie } from "../../libs/auth"
 import { getDatabaseConnection } from "../../libs/db"
 import { Organization } from "../../src/entity/Organization"
 
@@ -17,6 +17,7 @@ import { v4 as uuidv4 } from 'uuid';
 import { Alert } from "@material-ui/lab"
 import  { useRouter } from 'next/router';
 import { Contact } from "../../src/entity/Contact"
+import { decodeAuthCookie } from "../../libs/user"
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
     container: {
@@ -187,15 +188,14 @@ export const getServerSideProps = async (ctx: NextPageContext) => {
     try{
     console.log("========project update=============")
     console.log(cookiestr)
-    const token = decodeAuthCookie(cookiestr)
-    console.log(token)
+    const user = decodeAuthCookie(cookiestr)
     const db = await getDatabaseConnection()
     const orep = db.getRepository<Organization>('organization')
     const build = orep.createQueryBuilder().innerJoin('person', 'Person', 'Person.belongOrganizationId = Organization.id')
-        .where("Person.userId = :id", {id: token.UserId})
+        .where("Person.userId = :id", {id: user.id})
     const oresult = await build.getOne()
     const crep = db.getRepository<Contact>('contact')
-    const cbuild = crep.createQueryBuilder().where("createbyId = :id", {id: token.UserId})
+    const cbuild = crep.createQueryBuilder().where("createbyId = :id", {id: user.id})
     const cresult = await cbuild.getMany()
     const projectId = ctx.query?ctx.query.projectId:''
     var re: Project| IProject
@@ -206,7 +206,7 @@ export const getServerSideProps = async (ctx: NextPageContext) => {
         re = new IProject()
     }
     re.organizationId = oresult?oresult.id:''
-    re.createbyId = token.UserId
+    re.createbyId = user.id
     console.log(re)
     return {
         "props":{

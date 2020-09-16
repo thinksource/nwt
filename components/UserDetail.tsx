@@ -40,7 +40,7 @@ const UserDetail = (props: ListDetailProps) => {
         else if(!UserId){setMessage("Do not login as user, please login again")}
         else{
         const data = { oldpass, newpass, id: UserId}
-        fetch('http://localhost:3000/api/user/resetpass', {
+        fetch('/api/user/resetpass', {
             method: 'POST',
             headers: {
               'Content-Type': 'application/json',

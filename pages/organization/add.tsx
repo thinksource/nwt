@@ -5,6 +5,7 @@ import Alert from '@material-ui/lab/Alert';
 import {ListInput} from "../../components/ListInput";
 import { useUser } from "../../components/UserProvider";
 import React from "react";
+import { NextPageContext } from "next";
 
 const OrgzForm = ()=>{
     const [name, setName] = useState<string>();
@@ -91,3 +92,4 @@ const OrgzForm = ()=>{
     )
 }
 export default OrgzForm
+

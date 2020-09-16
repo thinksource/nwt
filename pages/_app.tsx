@@ -6,7 +6,7 @@ import CssBaseline from '@material-ui/core/CssBaseline';
 import theme from '../components/theme';
 import { UserProvider } from '../components/UserProvider';
 import { Nav } from '../components/Nav';
-
+// import cookies from 'next-cookies'
 export default function MyApp(props: AppProps) {
   const { Component, pageProps } = props;
   // if(cookie){
@@ -15,6 +15,7 @@ export default function MyApp(props: AppProps) {
   React.useEffect(() => {
     // Remove the server-side injected CSS.
     const jssStyles = document.querySelector('#jss-server-side');
+    
     if (jssStyles) {
       jssStyles.parentElement!.removeChild(jssStyles);
     }
@@ -42,7 +43,8 @@ MyApp.getInitialProps = async (appContext: AppContext) => {
   // calls page's `getInitialProps` and fills `appProps.pageProps`
   const appProps = await App.getInitialProps(appContext);
   const cookie = appContext.ctx.req?.headers.cookie
-  console.log(cookie)
+
+  // console.log(cookies(appContext.ctx))
   appProps.pageProps = Object.assign(appProps.pageProps, {cookie})
 
   return {  ...appProps }

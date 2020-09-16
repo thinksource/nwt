@@ -17,26 +17,22 @@ const useStyles = makeStyles(theme => ({
   }
 }));
 
-interface NavProps {
-    userId?: string,
-    userRole?: string,
-    email?: string
-}
 
 
-const ProfileButton =(props: NavProps)=>{
+const ProfileButton =()=>{
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
+  const user = useUser()
   const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
     setAnchorEl(event.currentTarget);
   };
   const handleClose = () => {
     setAnchorEl(null);
   };
-  if(props.userId){
+  if(user.id){
     return (
       <>
       <Button aria-controls="simple-menu" aria-haspopup="true" onClick={handleClick}>
-      {props.email}
+      {user.email}
       </Button>
       <Menu
       id="simple-menu"
@@ -45,12 +41,12 @@ const ProfileButton =(props: NavProps)=>{
       open={Boolean(anchorEl)}
       onClose={handleClose}>
       <MenuItem onClick={handleClose}>
-        <Link href={`/person/${props.userId}`}>
+        <Link href={`/person/${user.id}`}>
           <a>Profile</a>
         </Link>
         </MenuItem>
       <MenuItem onClick={handleClose}>          
-      <Link href = {`/user/${props.userId}`}>
+      <Link href = {`/user/${user.id}`}>
             <a>My account</a>
       </Link>
       </MenuItem>
@@ -156,15 +152,16 @@ const TechnologyButton = ()=>{
   }
 }
 
-const OrgButton =(props: NavProps)=>{
+const OrgButton =()=>{
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
+  const user= useUser()
   const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
     setAnchorEl(event.currentTarget);
   };
   const handleClose = () => {
     setAnchorEl(null);
   };
-  if(props.userRole === 'admin'){
+  if(user.role == 'admin'){
     return (
       <>
       <Button aria-controls="simple-menu" aria-haspopup="true" onClick={handleClick}>
@@ -189,7 +186,7 @@ const OrgButton =(props: NavProps)=>{
       </Menu>
       </>
     )
-  }else if(props.userId){
+  }else if(user.id){
     return (
       <Button>
         <Link href="/organization/add">
@@ -232,26 +229,9 @@ export const Nav = ()=> {
 
       <ProjectButton></ProjectButton>
       <TechnologyButton></TechnologyButton>
-      <OrgButton userId={user.id} userRole={user.role} email={user.email}></OrgButton>
-      <ProfileButton userId={user.id} userRole={user.role} email={user.email}></ProfileButton>
+      <OrgButton></OrgButton>
+      <ProfileButton></ProfileButton>
       </Toolbar>
     </AppBar>
   );
 }
-
-// Nav.getInitialProps = async (ctx: NextPageContext) =>{
-//   const str_cookie =ctx.req?.headers.cookie
-//   const ret_obj={}
-
-//   if(str_cookie){
-//     // const mycookie = cookie.parse(str_cookie);
-
-//     // const decode = verify(mycookie.auth, GUID).valueOf() as {id: string, role: string, email:string}
-//     // console.log(decode)
-//     const decode = decodeAuthCookie(str_cookie)
-//     console.log("Nav init", decode)
-//     return decode
-    
-//   }
-  
-// }
