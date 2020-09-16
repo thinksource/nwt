@@ -93,3 +93,8 @@ const OrgzForm = ()=>{
 }
 export default OrgzForm
 
+export const getServerSideProps = async (ctx: NextPageContext) => {
+  console.log("===organization page init")
+  console.log(ctx.req?.headers.cookie)
+  return {props:{}}
+}

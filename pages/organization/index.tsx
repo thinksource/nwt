@@ -263,7 +263,7 @@ interface Props{
   rows: Row[]
 }
 
-export default function EnhancedTable(props: Props) {
+function EnhancedTable(props: Props) {
   const classes = useStyles();
   const rows: Row[] = props.rows as Row[] 
   const [order, setOrder] = React.useState<Order>('asc');
@@ -396,14 +396,16 @@ export default function EnhancedTable(props: Props) {
   );
 }
 
-EnhancedTable.getInitialProps = async (ctx: NextPageContext) =>{
+export default EnhancedTable
+
+export const getServerSideProps = async (ctx: NextPageContext) => {
   const host:string = (ctx.req && ctx.req.headers['host'])?ctx.req.headers['host']:''
   const baseUrl = ctx.req ? `http://${host}` : '';
-  // const str_cookie =ctx.req?.headers.cookie
-  
+  const str_cookie =ctx.req?.headers.cookie
+  const header = new Headers([["Cookie", str_cookie?str_cookie:'']])
   // console.log(`${baseUrl}/api/org`)
   // const cookie= ctx.req?.headers.cookie?ctx.req.headers.cookie:''
-  const fetchbuild = fetcher('get')
+  const fetchbuild = fetcher('get', undefined, header)
   const result = await fetchbuild(`${baseUrl}/api/org`)
     // .catch((e)=>{
     //   if(e.response && e.response.status>400){
@@ -412,16 +414,19 @@ EnhancedTable.getInitialProps = async (ctx: NextPageContext) =>{
     //     }
     //   }
     // });
+
   if(result){
     if(result.ok){
       const rjson = await result.json()
-      console.log("==================")
-      console.log(rjson)
-      return {rows: rjson}
+      return {props: {rows: rjson}}
     }else if(result.status >= 400){
-      ctx.res?.writeHead(301, {Location: '/login'})
+      // ctx.res?.writeHead(301, {Location: '/login'})
+      console.log(result.statusText)
+      return {props:{rows:[]}}
     }
+    return {props:{rows:[]}}
   }
+  return {props:{rows:[]}}
 }
   //   const str_cookie =ctx.req?.headers.cookie
   //   const ret_obj={}
