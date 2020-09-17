@@ -41,7 +41,7 @@ const ProfileButton =()=>{
       open={Boolean(anchorEl)}
       onClose={handleClose}>
       <MenuItem onClick={handleClose}>
-        <Link href={`/person/${user.id}`}>
+        <Link href='/person/editprofile'>
           <a>Self Register</a>
         </Link>
         </MenuItem>

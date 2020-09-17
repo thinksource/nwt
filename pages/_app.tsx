@@ -6,6 +6,7 @@ import CssBaseline from '@material-ui/core/CssBaseline';
 import theme from '../components/theme';
 import { UserProvider } from '../components/UserProvider';
 import { Nav } from '../components/Nav';
+import '../style.css'
 // import cookies from 'next-cookies'
 export default function MyApp(props: AppProps) {
   const { Component, pageProps } = props;
