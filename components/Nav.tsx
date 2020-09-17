@@ -42,7 +42,7 @@ const ProfileButton =()=>{
       onClose={handleClose}>
       <MenuItem onClick={handleClose}>
         <Link href={`/person/${user.id}`}>
-          <a>Profile</a>
+          <a>Self Register</a>
         </Link>
         </MenuItem>
       <MenuItem onClick={handleClose}>          
@@ -99,7 +99,7 @@ const ProjectButton = ()=>{
         </MenuItem>
         <MenuItem onClick={handleClose}> 
           <Link href={`/project/update`}>
-            <a>Register new project</a>
+            <a>Register Project</a>
           </Link>
         </MenuItem>
         

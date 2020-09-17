@@ -21,7 +21,7 @@ handler.post(async (req, res)=>{
     }
     person.COVID_19 = COVID19
     person.belongOrganizationId = belong_org
-    person.user = userId
+    person.userId = userId
     person.first_name = firstname
     person.last_name = lastname
     person.expertise = expertise

@@ -12,8 +12,12 @@ export class Person extends BaseEntity {
     @PrimaryGeneratedColumn('uuid')
     id!: string;
 
+
+    @Column('uuid')
+    userId!: string;
+
     @OneToOne( () => User)
-    @JoinColumn()
+    @JoinColumn({name: 'userId'})
     user!: User;
 
     @Column({
@@ -48,7 +52,7 @@ export class Person extends BaseEntity {
     COVID_19!: boolean;
 
 
-    toJSON(inject: Object) {
+    toJSON(inject: Object={}) {
         var tmp = _.omit(this, ['contact']);
         var res = _.pickBy(tmp, v => (v !== undefined && typeof v!== "function"))
         return JSON.parse(JSON.stringify(Object.assign(res, inject)))
@@ -59,14 +63,8 @@ export class Person extends BaseEntity {
     generation(userstr:string){
         this.id= uuidv4()
         this.COVID_19 = false
-        const user = new User()
-        user.id=userstr
-        this.first_name = ""
-        this.last_name = ""
-        this.title = ""
-        this.user = user
+        this.userId = userstr
         this.expertise = []
-        console.log("here is:")
         console.log(this)
         return this
     }

@@ -13,6 +13,7 @@ import { Contact } from '../../src/entity/Contact';
 import { TitleSelect } from '../../components/TitleSelect';
 import { useUser } from '../../components/UserProvider';
 import { ListInput } from '../../components/ListInput';
+import { decodeAuthCookie } from '../../libs/user';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -37,9 +38,8 @@ export interface PeopleProps {
     names: string[];
 }
 interface Props {
-  organzations: Array<OrganizationProps>
-  person: Person,
-  userId: string
+  organzations: Array<OrganizationProps>,
+  person: Person
 }
 
 interface IContact{
@@ -71,9 +71,9 @@ const PersonForm = (p : Props)=>{
     var ncontact = new Contact()
 
     useEffect(()=>{
-      console.log(`/api/contact/${p.userId}`)
+      console.log(`/api/contact/${user.id}`)
       const myfetch = fetcher('get')
-      myfetch(`/api/contact/${p.userId}`).then(async res=>{
+      myfetch(`/api/contact/${user.id}`).then(async res=>{
         if(res.ok){
             const result = (await res.json()) as IContact[]
             setRows(await result)
@@ -129,7 +129,7 @@ const PersonForm = (p : Props)=>{
 
     const HandleSubmit=async ()=>{
        var val = {title, firstname, lastname, COVID19, belong_org:belongOrg.id, 
-              userId: p.person.user,
+              userId: p.person.userId,
               expertise: clinical_exp,
               id: p.person.id,
               introduction
@@ -296,9 +296,16 @@ const PersonForm = (p : Props)=>{
 // }
 export const getServerSideProps = async (ctx: NextPageContext) => {
     let resultorg: OrganizationProps[] = []
-    console.log(ctx.query)
-    const userId : string = ctx.query.userId?ctx.query.userId.toString():''
-    console.log(userId)
+    var cookie: string
+    if(ctx.req?.headers.cookie){
+      cookie=ctx.req?.headers.cookie
+    }else{
+      cookie=""
+    }
+    const user = decodeAuthCookie(cookie)
+    // console.log(ctx.query)
+    // const userId : string = ctx.query.userId?ctx.query.userId.toString():''
+    console.log(user)
     var presult: Person | undefined = undefined
     var person: Person
     const db = await getDatabaseConnection()
@@ -311,19 +318,16 @@ export const getServerSideProps = async (ctx: NextPageContext) => {
     // .where("person.userid = :id", { id: userId })
     // .getOne();
     // console.log(repeo)
-    if(userId){
-      presult = await prep.findOne({where: {user: userId}, relations: ["belong_organization"]})
-      console.log(presult)
-      console.log(await presult?.belong_organization)
+    if(user.id){
+      presult = await prep.findOne({where: {userId: user.id}, relations: ["belong_organization"]})
     }
-    person = presult? presult: new Person().generation(userId)
-    console.log("+++++++++++++++")
-    console.log(person.toJSON({user: userId}))
+    person = presult? presult: new Person().generation(user.id)
+    console.log(person)
     for (let ri of result){
         resultorg.push(ri.toSimpleJSON())
     }
     
-    return {'props': {'organzations' : resultorg, "person": person.toJSON({user: userId}), "userId": userId}}
+    return {'props': {'organzations' : resultorg, "person": person.toJSON()}}
   };
 export default PersonForm
 
