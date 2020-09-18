@@ -11,6 +11,8 @@ import { Button } from '@material-ui/core';
 export default function Index() {
   const router = useRouter()
   const handlePerson=()=>{ router.push('/person/search')}
+  const handleProject=()=>{ router.push('/project/search')}
+  const handleTechnology=()=>{router.push('technology/search')}
   return (
     <Container maxWidth="sm">
       <Box my={4}>
@@ -21,8 +23,8 @@ export default function Index() {
           Go to the about page
         </Link><br />
         <Button onClick={handlePerson} variant="contained" color="default">Person List</Button>&nbsp;
-        <Button onClick={handlePerson} variant="contained" color="secondary">Project List</Button>&nbsp;
-        <Button onClick={handlePerson} variant="contained" color="primary">Technology List</Button>
+        <Button onClick={handleProject} variant="contained" color="secondary">Project List</Button>&nbsp;
+        <Button onClick={handleTechnology} variant="contained" color="primary">Technology List</Button>
         <ProTip />
         <Copyright />
       </Box>

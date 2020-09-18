@@ -11,13 +11,12 @@ import { Button, Container, InputLabel, TablePagination, TextField, Typography }
 import { NextPageContext } from 'next';
 import { getDatabaseConnection } from '../../libs/db';
 import { useRouter } from 'next/router'
-import Link from 'next/link';
 
-import { Person } from '../../src/entity/Person';
 import { flaten } from '../../libs/utils';
 
 import {Like} from "typeorm";
 import { ParsedUrlQuery } from 'querystring';
+import { Technology } from '../../src/entity/Technology';
 const useStyles = makeStyles({
   table: {
     minWidth: 650,
@@ -29,16 +28,15 @@ const useStyles = makeStyles({
 
 
 interface Props{
-  person: Person[]
+  technology: Technology[]
 }
 
 export default function ProjectTable(props:Props) {
   const classes = useStyles();
-  const rows = props.person
+  const rows = props.technology
   const [rowsPerPage, setRowsPerPage] = React.useState(5);
   const [page, setPage] = React.useState(0);
-  const [first_name, setFirstname] = React.useState('')
-  const [last_name, setLastname] = React.useState('')
+  const [techname, setTechname] = React.useState('')
   const router = useRouter()
   const handleChangePage = (_event: unknown, newPage: number) => {
     setPage(newPage);
@@ -50,7 +48,7 @@ export default function ProjectTable(props:Props) {
   };
 
   const handleSearch = ()=>{
-    const queryjson={first_name, last_name}
+    const queryjson={name: techname}
     const query= Object.entries(queryjson).map(entries=>`${entries[0]}=${entries[1]}`).join('&')
     router.push('/person/search?'+query)
   }
@@ -58,37 +56,34 @@ export default function ProjectTable(props:Props) {
   return (
     <Container maxWidth="sm">
       <Typography variant="h4" component="h4" gutterBottom>
-          People List
+          Technology List
     </Typography>
     <InputLabel>Search:</InputLabel>
-    <TextField label="first name input" value={first_name} onChange={e=>{setFirstname(e.target.value)}}></TextField>
-    <TextField label="first name input" value={last_name} onChange={e=>{setLastname(e.target.value)}}></TextField>
+    <TextField label="first name input" value={techname} onChange={e=>{setTechname(e.target.value)}}></TextField>
     <Button variant="contained" color="primary" onClick={handleSearch}>Search</Button>
     <TableContainer component={Paper} className={classes.tableContainer}>
       <Table className={classes.table} aria-label="simple table">
         <TableHead>
           <TableRow>
-            <TableCell>Title</TableCell>
-            <TableCell align="right">FirstNameS</TableCell>
-            <TableCell align="right">econdName</TableCell>
-            <TableCell align="right">COVID 19</TableCell>
-            <TableCell align="right">Linked User email</TableCell>
+            <TableCell>Name</TableCell>
+            <TableCell align="right">Link</TableCell>
             <TableCell align="right">Organization</TableCell>
+            <TableCell align="right">COVID 19</TableCell>
+            <TableCell align="right">Create by</TableCell>
+            <TableCell align="right">Contact</TableCell>
           </TableRow>
         </TableHead>
         <TableBody>
           {rows.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((row) => (
             <TableRow key={row.id}>
               <TableCell component="th" scope="row">
-                  {row.title}
+                  {row.name}
               </TableCell>
-              <TableCell align="right">
-                <Link href={`/person/${row.id}`}>
-                  <a>{row.first_name}</a></Link></TableCell>
-              <TableCell align="right">{row.last_name}</TableCell>
+              <TableCell align="right">{row.link}</TableCell>
+              <TableCell align="right">{row.organization?row.organization.name:""}</TableCell>
               <TableCell align="right">{row.COVID_19?"Yes": "No"}</TableCell>
-              <TableCell align="right">{row.user.email}</TableCell>
-              <TableCell align="right">{row.belong_organization.name}</TableCell> 
+              <TableCell align="right">{row.createby.email}</TableCell>
+              <TableCell align="right">{`${row.contact.first_name} ${row.contact.last_name} ${row.contact.email}`}</TableCell>
             </TableRow>
           ))}
         </TableBody>
@@ -123,8 +118,8 @@ export const getServerSideProps = async (ctx: NextPageContext) => {
     const dbquery= getdbquery(ctx.query)
     console.log(dbquery)
     const db = await getDatabaseConnection()
-    const prep = db.getRepository<Person>('person')
-    const result = await prep.find({relations: ['user','belong_organization']})
+    const prep = db.getRepository<Technology>('technology')
+    const result = await prep.find({relations: ['createby','organization', 'contact']})
     //     const fetchbuild = fetcher('post')
     // const result = await fetchbuild('/api/person/list')
     // const build = prep.createQueryBuilder().innerJoin("user", "User", "User.id = Project.createbyId").where("User.id = :userId", {userId})
@@ -136,6 +131,6 @@ export const getServerSideProps = async (ctx: NextPageContext) => {
     for(let r of result){
       console.log(flaten(r))
     }
-    return {'props': {'person' : result.map(r=>flaten(r))}}
+    return {'props': {'technology' : result.map(r=>flaten(r))}}
     
 }
