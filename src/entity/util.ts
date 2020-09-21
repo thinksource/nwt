@@ -1,8 +1,9 @@
 export enum PersonTitle {
-    Mr = "Mr.",
-    Miss = "Miss",
+    Professor_Emeritus = 'Professor Emeritus',
+    Professor_Associate = 'Professor Associate',
+    Professor = 'Professor',
     Dr = "Dr.",
-    Mrs ="Mrs.",
+    Mr = "Mr.",
     Ms = "Ms.",
     Blank = ""
 }

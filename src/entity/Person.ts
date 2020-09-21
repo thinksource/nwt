@@ -51,6 +51,9 @@ export class Person extends BaseEntity {
     @Column({type: "boolean", default: false})
     COVID_19!: boolean;
 
+    @Column({type:"boolean", default: false})
+    clinical_exp!: boolean;
+
 
     toJSON(inject: Object={}) {
         var tmp = _.omit(this, ['contact']);

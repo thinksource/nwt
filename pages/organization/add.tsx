@@ -57,7 +57,7 @@ const OrgzForm = ()=>{
     
     return (
         <>
-          <Typography variant="h3">Oraganization information</Typography>
+          <Typography variant="h3">Organization information</Typography>
             <Grid
                 container
                 spacing={0}

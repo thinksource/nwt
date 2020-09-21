@@ -1,5 +1,5 @@
 import React, { useState, ChangeEvent, useEffect } from 'react';
-import { Typography, Grid,  TextField, FormControlLabel, Switch, NativeSelect, makeStyles, Theme, createStyles, Paper, Button, TableContainer, Table, TableHead, TableRow, TableCell, TableBody, Dialog, DialogTitle, DialogContent, InputLabel } from '@material-ui/core';
+import { Typography, Grid,  TextField, FormControlLabel, Switch, makeStyles, Theme, createStyles, Paper, Button, TableContainer, Table, TableHead, TableRow, TableCell, TableBody, Dialog, DialogTitle, DialogContent, InputLabel, Input } from '@material-ui/core';
 import { Formik, Form, Field, FormikHelpers} from 'formik'
 import { NextPageContext} from 'next';
 import { getDatabaseConnection } from '../../libs/db';
@@ -14,6 +14,7 @@ import { TitleSelect } from '../../components/TitleSelect';
 import { useUser } from '../../components/UserProvider';
 import { ListInput } from '../../components/ListInput';
 import { decodeAuthCookie } from '../../libs/user';
+import CountrySelect from '../../components/CountrySelect';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -54,7 +55,6 @@ interface IContact{
 
 
 const PersonForm = (p : Props)=>{
-
     const classes = useStyles();
     const [title, setTitle] = useState<string>(p.person.title?p.person.title:"");
     const [firstname, setFirstname] = useState<string>(p.person.first_name);
@@ -152,14 +152,9 @@ const PersonForm = (p : Props)=>{
                 <Grid container spacing={3}>
     <Grid item xs={12}>{message?<Alert severity={error}>{message}</Alert>:""}</Grid>
                     <Grid item xs={2}>
-                    <NativeSelect value={title} className={classes.centalign}
+                    <TitleSelect value={title} className={classes.centalign}
                         onChange={handleChangeTitle}>
-                        <option value=""></option>
-                        <option value="Mr.">Mr.</option>
-                        <option value="Ms.">Ms.</option>
-                        <option value="Mrs.">Mrs.</option>
-                        <option value="Miss">Miss</option>
-                    </NativeSelect>
+                    </TitleSelect>
                       
                     </Grid>
                     <Grid item xs={5}>
@@ -245,10 +240,10 @@ const PersonForm = (p : Props)=>{
             <Field name="job_title" as={TextField} label="Input Job title"></Field>
             <InputLabel htmlFor="title-native-helper">email:</InputLabel>
             <Field name="email" as={TextField} label="Input email"></Field>
+            <InputLabel htmlFor="title-native-helper">country:</InputLabel>
+            <Field name="country" as={CountrySelect} label="Input country"></Field><br/>
             <InputLabel htmlFor="title-native-helper">state:</InputLabel>
             <Field name="state" as={TextField} label="Input state"></Field>
-            <InputLabel htmlFor="title-native-helper">country:</InputLabel>
-            <Field name="country" as={TextField} label="Input country"></Field><br/>
             <button type="submit">Submit</button>
           </Form>
         )}

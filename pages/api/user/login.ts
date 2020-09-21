@@ -9,10 +9,12 @@ import handler from '../../../libs/handler'
 
 handler.post(async (req, res)=>{
     let message:string;
+    try{
     const db = await getDatabaseConnection()
     
     const dbrep = db.getRepository<User>('user');
     const {email, password} = req.body
+
     const result= await dbrep.findOne({where : {email}})
     if (result){
         const pw_hash = pwhash(password, result.salt)
@@ -28,6 +30,9 @@ handler.post(async (req, res)=>{
         message = "can not find the email address";
         res.status(401).json({message})
     }
+}catch(e){
+    res.status(500).json(e)
+} 
 })
 
 export default handler

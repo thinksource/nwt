@@ -9,7 +9,10 @@ export const TitleSelect=(p: NativeSelectProps)=>{
         <option value="Mr.">Mr.</option>
         <option value="Ms.">Ms.</option>
         <option value="Mrs.">Mrs.</option>
-        <option value="Miss">Miss</option>
+        <option value="Dr.">Dr.</option>
+        <option value="Professor Emeritus">Professor Emeritus</option>
+        <option value="Professor Associate">Professor Associate</option>
+        <option value="Professor">Professor</option>
         </NativeSelect>
     )
 }

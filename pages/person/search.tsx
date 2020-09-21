@@ -70,8 +70,9 @@ export default function ProjectTable(props:Props) {
           <TableRow>
             <TableCell>Title</TableCell>
             <TableCell align="right">FirstNameS</TableCell>
-            <TableCell align="right">econdName</TableCell>
+            <TableCell align="right">SecondName</TableCell>
             <TableCell align="right">COVID 19</TableCell>
+            <TableCell align="right">Expertise</TableCell>
             <TableCell align="right">Linked User email</TableCell>
             <TableCell align="right">Organization</TableCell>
           </TableRow>
@@ -87,6 +88,7 @@ export default function ProjectTable(props:Props) {
                   <a>{row.first_name}</a></Link></TableCell>
               <TableCell align="right">{row.last_name}</TableCell>
               <TableCell align="right">{row.COVID_19?"Yes": "No"}</TableCell>
+              <TableCell align="right">{row.expertise?row.expertise:""}</TableCell>
               <TableCell align="right">{row.user.email}</TableCell>
               <TableCell align="right">{row.belong_organization.name}</TableCell> 
             </TableRow>

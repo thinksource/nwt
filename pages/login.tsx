@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Typography, Button, Link } from '@material-ui/core';
-import { Formik, Form, Field} from 'formik'
+import { Formik, Form, Field, ErrorMessage} from 'formik'
 // import { mutate} from 'swr';
 
 // import Axios, { Method } from 'axios';
@@ -8,6 +8,8 @@ import { useUser } from '../components/UserProvider';
 interface Props {
     previousPath: string
 }
+
+
 const LoginForm: React.FC<Props> = (loginData: Props)=>{
     // const emailRef = useRef<HTMLInputElement>(null);
     // const passRef = useRef<HTMLInputElement>(null);
@@ -43,12 +45,16 @@ const LoginForm: React.FC<Props> = (loginData: Props)=>{
                     window.location.replace(p)            
                 }
             }}
+            
+
+
             initialValues={{ email: '', password:'' }}
             >
                 <Form>
                     <label htmlFor="message">{message}</label>
                     <label htmlFor="email">email:</label>
                     <Field name="email"></Field><br/>
+                    <ErrorMessage name="email" component="div"></ErrorMessage>
                     <label htmlFor="password">password:</label>
                     <Field name='password' type="password"></Field><br/>
                     <Button type="submit" variant="contained" color="primary">Login</Button>

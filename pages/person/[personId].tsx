@@ -38,6 +38,10 @@ const PersonInform=(props: Props)=>{
             <TableCell>{person.COVID_19?"Yes":"No"}</TableCell>
             </TableRow>
             <TableRow>
+            <TableCell>Expertise:</TableCell>
+            <TableCell>{person.expertise?person.expertise.toString():""}</TableCell>
+            </TableRow>
+            <TableRow>
             <TableCell>Belong Organization:</TableCell>
             <TableCell>{person.belong_organization.name}</TableCell>
             </TableRow>
