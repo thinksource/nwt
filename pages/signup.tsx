@@ -1,78 +1,113 @@
-import React, {useState, FormEvent} from 'react';
+import React, {useState} from 'react';
 import Router from 'next/router';
 import fetcher from '../libs/fetcher'
 import * as Yup from 'yup';
-import { Typography } from '@material-ui/core';
-
-const LoginSchema = Yup.object().shape({
-  email: Yup.string().email('Invalid email').required('Required'),
-  password: Yup.string().min(6, 'Too Short!').max(50, 'To Long')
+import { Button, Typography } from '@material-ui/core';
+import { Field, Form, Formik } from 'formik';
+import Captcha from "../components/Captcha";
+import CheckCircleIcon from '@material-ui/icons/CheckCircle';
+import CancelIcon from '@material-ui/icons/Cancel';
+import { red, green} from '@material-ui/core/colors';
+const SignupSchema = Yup.object().shape({
+  email: Yup.string().email('Invalid email'),
+  password: Yup.string().min(6, 'Too Short!').max(50, 'To Long'),
+  passwordConfirmation: Yup.string().min(6, 'Too Short!').max(50, 'To Long')
 })
 const Signup = () => {
   const [signupError, setSignupError] = useState('');
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
-  const [passwordConfirmation, setPasswordConfirmation] = useState('');
-
-  function handleSubmit(e: FormEvent) {
-    e.preventDefault();
-    const json = JSON.stringify({email,password,passwordConfirmation});
-    const myfetcher = fetcher('post', json)
-    myfetcher('/api/user/signup')
-      .then((r) => r.json())
-      .then((data) => {
-        if (data && data.error) {
-          setSignupError(data.message);
-        }
-        if (data && data.id) {
-          console.log()
-          setSignupError("Sign Up successful")
-          Router.push('/login');
-        }
-      });
+  const [captcha, setCaptcha] = useState("");
+  const [correct, setCorrect] = useState("")
+  const handleFocusOut=(e:React.MouseEvent<HTMLInputElement>)=>{
+    console.log(e.currentTarget.value)
+    console.log(captcha)
+    if(e.currentTarget.value==captcha){
+      setCorrect("Yes")
+    }else{
+      setCorrect("No")
+    }
   }
   return (
-    
-    <form onSubmit={handleSubmit}>
-        <Typography variant="h3">Sign Up</Typography>
+    <Formik initialValues={{
+      email:'',
+      password:'',
+      passwordConfirmation:'',
+      reCap:''
+    }}
+    validationSchema={SignupSchema}
+    validate = {function (values) {
+      const errors: { [id: string]: string; } = {};
+      if (values.password !== values.passwordConfirmation) {
+        errors['form'] = 'password confirmation must be same';
+        return errors;
+      }
+      return errors;
+    }}
+    onSubmit = {async (values)=>{
+      console.log(captcha)
+      console.log(values.reCap)
+      if(captcha==values.reCap){
+        const fetchbuild = fetcher('post', JSON.stringify(values))
+        const result = await fetchbuild('/api/user/signup')
+        if(result.ok){
+          // const rjson = await result.json()
+          setSignupError("Sign Up Successful")
+          Router.push('/login')
+        }else if(result.status >= 400){
+          const error = await result.json()
+          return error
+        }
+      }else{
+        setSignupError("Must input correct Captcha!")
+      }
+
+    }}
+    >
+    {({errors})=>(
+    <Form>
+        <Typography variant="h3" gutterBottom>Sign Up</Typography>
+      <ul>
+      <li>
       <label>{signupError}</label>
+      </li>
+      <li>
       <label htmlFor="email">
-        email
+        email:
       </label>
-      <input
-          value={email}
-          onChange={(e) => setEmail(e.target.value)}
-          name="email"
-          type="email"
-        />
-
-      <br />
-
+      <Field name="email" type="email"/>
+      </li>
+      
+      {errors.email?(<li>{errors.email}</li>):null}
+      <li>
       <label>
-        password
+        password:
       </label>
-      <input
-          value={password}
-          onChange={(e) => setPassword(e.target.value)}
-          name="password"
-          type="password"
-        />
-      <br />
+      <Field name="password" type="password"></Field>
+      </li>
+      {errors.password?(<li>{errors.password}</li>):null}
+      <li>
       <label>
         password again:
-        <input
-          value={passwordConfirmation}
-          onChange={(e) => setPasswordConfirmation(e.target.value)}
-          name="password"
-          type="password"
-        />
+        <Field name="passwordConfirmation" type="password"></Field>
       </label>
-
-      <br />
-
-      <input type="submit" value="SignUp" />
+      </li>
+      {errors.passwordConfirmation?(<li>{errors.passwordConfirmation}</li>):null}
+      <li>
+        <Captcha charNum={4} height={30} onChange={(e)=>setCaptcha(e)}/>
+      </li>
+      <li>
+      <Field name="reCap" type="input" size='4' maxLength="4" onBlur={handleFocusOut}/>
+      {correct=="Yes"?<CheckCircleIcon  style={{ color: green[500] }}/>: null}
+      {correct=="No"?<CancelIcon  style={{ color: red[500] }}/>: null}
+      {/* <input type="submit" value="SignUp" /> */}
+      </li>
+      <li>
+      <Button variant="contained" type="submit">SignUp</Button>
+      </li>
       {signupError && <p style={{color: 'red'}}>{signupError}</p>}
-    </form>
+      </ul>
+    </Form>
+    )}
+    </Formik>
   );
 };
 
