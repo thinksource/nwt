@@ -1,8 +1,8 @@
-# Next.js with TypeScript example
+# Next.js with TypeScript 
 
 ## How to use
 
-Download the example [or clone the repo](https://github.com/mui-org/material-ui):
+
 
 ```sh
 curl https://codeload.github.com/mui-org/material-ui/tar.gz/master | tar -xz --strip=2  material-ui-master/examples/nextjs-with-typescript
@@ -34,3 +34,17 @@ If you get this warning, please make sure that you configure `getInitialProps` i
 ## Api rule
 
 if user in post method request should be userId replace for auth
+
+
+## The Database edit
+
+### Genertation of new schema
+```
+npm run typeorm -- migration:generate -- -n name
+```
+
+### Run Schema
+
+```
+npm run typeorm -- migration:run
+```

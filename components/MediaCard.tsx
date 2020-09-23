@@ -11,13 +11,13 @@ import { Contact } from '../src/entity/Contact';
 
 interface Props {
     title: string,
-    contact: Contact,
+    // contact: Contact,
     
 }
 
 const useStyles = makeStyles({
   root: {
-    maxWidth: 345,
+    maxWidth: 300,
   },
   media: {
     height: 140,

@@ -59,7 +59,8 @@ const PersonForm = (p : Props)=>{
     const [title, setTitle] = useState<string>(p.person.title?p.person.title:"");
     const [firstname, setFirstname] = useState<string>(p.person.first_name);
     const [lastname, setLastname] = useState<string>(p.person.last_name);
-    const [clinical_exp, setClinicalExp] = useState<string[]>(p.person.expertise?p.person.expertise:[]);
+    const [expertise, setExpertise] = useState<string[]>(p.person.expertise?p.person.expertise:[]);
+    const [clinical_exp, setClinicalExp] = useState<Boolean>(p.person.clinical_exp);
     const [COVID19, setCOVID19] = useState<Boolean>(p.person.COVID_19);
     const [belongOrg, setbelongOrg] = useState<OrganizationProps>(p.person.belong_organization?p.person.belong_organization: new Organization().generate());
     const [introduction, setIntroduction] = useState<string>(p.person.introduction)
@@ -92,6 +93,10 @@ const PersonForm = (p : Props)=>{
     
     const handleCOVID19 = (event: React.ChangeEvent<HTMLInputElement>) => {
         setCOVID19(event.target.checked)
+    }
+    
+    const handleClinicalExp = (e: ChangeEvent<HTMLInputElement>)=>{
+      setClinicalExp(e.target.checked)
     }
     
     const handleChangeTitle =(e: ChangeEvent<HTMLSelectElement>)=>{
@@ -130,7 +135,8 @@ const PersonForm = (p : Props)=>{
     const HandleSubmit=async ()=>{
        var val = {title, firstname, lastname, COVID19, belong_org:belongOrg.id, 
               userId: p.person.userId,
-              expertise: clinical_exp,
+              expertise,
+              clinical_exp,
               id: p.person.id,
               introduction
               }
@@ -163,7 +169,8 @@ const PersonForm = (p : Props)=>{
                     <Grid item xs={5}>
                       <TextField label="Last Name" value={lastname} onChange={ChangeLastName}></TextField>
                     </Grid>
-                    <Grid item xs={12}>
+                    <ul>
+                    <li>
                     <TextField
                     id="outlined-multiline-static"
                     label="Summary of healthcare experience"
@@ -175,12 +182,24 @@ const PersonForm = (p : Props)=>{
                     placeholder="free text; 350 characters with spaces"
                     variant="outlined"
                     />
-                    </Grid>
-                    <Grid item xs={6}>
+                    </li>
+                    <li>
                     <FormControlLabel
-                    label="Clinical expertise"
+                    label=""
                     control={
-                      <ListInput value={clinical_exp} name="exps" onChange={setClinicalExp} labeltext="keywords of experience"></ListInput>
+                      <ListInput value={expertise} name="exps" onChange={setExpertise} labeltext="keywords of experience"></ListInput>
+                    }
+                    
+                    />
+                    <FormControlLabel
+                    label="Clinic Experience"
+                    control={
+                      <Switch
+                      checked={clinical_exp?true:false}
+                      onChange={handleClinicalExp}
+                      name="checkedB"
+                      color="secondary"
+                  />
                     }
                     
                     />
@@ -196,10 +215,9 @@ const PersonForm = (p : Props)=>{
                     }
                     ></FormControlLabel>
 
-                    </Grid>
+                    </li>
 
-                    <br/>
-                    <Grid item xs={9}>
+                    <li>
                     <Autocomplete
                         id="combo-box-demo"
                         options={p.organzations}
@@ -210,19 +228,19 @@ const PersonForm = (p : Props)=>{
                         style={{ width: 300 }}
                         renderInput={(params:any) => <TextField {...params} label="find Organization" variant="outlined" />}
                         />
-                    </Grid>
-                    <Grid item xs={9}> </Grid>
-
-                    <Grid item xs={6}>
+                    </li>
+                    <li>
                     <Button variant="contained" color="primary" onClick={HandleSubmit}>
                       Submit Change
                     </Button>
-                    </Grid>
+                    </li>
+                    
                     <Grid item xs={10}>
+                        <br />
     <TableContainer component={Paper}>
-      <button type="button" onClick={handleOpen}>
+      <Button variant="contained" onClick={handleOpen}>
         Add Contact
-      </button>
+      </Button>
 
       <Dialog onClose={handleClose} aria-labelledby="simple-dialog-title" open={open}>
         <DialogTitle >Input Address details</DialogTitle>
@@ -274,7 +292,7 @@ const PersonForm = (p : Props)=>{
       </Table>
     </TableContainer>
      </Grid>
-
+     </ul>
                    
     </Grid>
         </div>

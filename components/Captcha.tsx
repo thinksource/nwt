@@ -55,6 +55,7 @@ const Captcha: React.FC<ICaptchaProps> = ({
 
   const generateCaptcha = useCallback(() => {
     console.log(height)
+    const rfontSize=Math.min(Math.floor(height/3*2), fontSize)
     let checkCode = '';
     if (canvas.current) {
       const ctx = canvas.current.getContext('2d');
@@ -72,7 +73,7 @@ const Captcha: React.FC<ICaptchaProps> = ({
           ctx.beginPath();
           ctx.fillStyle = "white";
           ctx.strokeStyle = randomColor();
-          ctx.font = `${fontSize}px serif`;
+          ctx.font = `${rfontSize}px serif`;
           ctx.rotate((Math.PI / 180) * randomNum(-5, 5));
           ctx.strokeText(code, offset + i * charGap, height / 2 + 8);
           ctx.beginPath();
@@ -107,7 +108,7 @@ const Captcha: React.FC<ICaptchaProps> = ({
 
   return (
     <S.SCaptcha
-      className='react-captcha'
+      className={cs('react-captcha', className)}
       onClick={handleClick}
       height={height}
       width={width}

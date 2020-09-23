@@ -70,6 +70,7 @@ export default function CountrySelect(p:AutocompleteProps<CountryType, boolean, 
 
 // From https://bitbucket.org/atlassian/atlaskit-mk-2/raw/4ad0e56649c3e6c973e226b7efaeb28cb240ccb0/packages/core/select/src/data/countries.js
 const countries = [
+  { code: 'AU', label: 'Australia', phone: '61', suggested: true },
   { code: 'AD', label: 'Andorra', phone: '376' },
   { code: 'AE', label: 'United Arab Emirates', phone: '971' },
   { code: 'AF', label: 'Afghanistan', phone: '93' },
@@ -82,7 +83,7 @@ const countries = [
   { code: 'AR', label: 'Argentina', phone: '54' },
   { code: 'AS', label: 'American Samoa', phone: '1-684' },
   { code: 'AT', label: 'Austria', phone: '43' },
-  { code: 'AU', label: 'Australia', phone: '61', suggested: true },
+ 
   { code: 'AW', label: 'Aruba', phone: '297' },
   { code: 'AX', label: 'Alland Islands', phone: '358' },
   { code: 'AZ', label: 'Azerbaijan', phone: '994' },

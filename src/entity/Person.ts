@@ -42,6 +42,9 @@ export class Person extends BaseEntity {
     @JoinColumn({ name: 'belongOrganizationId' })
     belong_organization!: Organization;
 
+    @Column('varchar', {length: 256})
+    org_link?:string;
+
     @Column("simple-array")
     expertise?: string[];
 

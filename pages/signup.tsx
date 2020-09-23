@@ -43,8 +43,6 @@ const Signup = () => {
       return errors;
     }}
     onSubmit = {async (values)=>{
-      console.log(captcha)
-      console.log(values.reCap)
       if(captcha==values.reCap){
         const fetchbuild = fetcher('post', JSON.stringify(values))
         const result = await fetchbuild('/api/user/signup')

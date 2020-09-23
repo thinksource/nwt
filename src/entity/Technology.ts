@@ -27,6 +27,9 @@ export class Technology extends BaseEntity{
 
     @Column('uuid')         
     organizationId?: string;
+    
+    @Column('varchar', {length: 256})
+    org_link?:string;
 
     @Column('uuid')
     contactId!:string
